@@ -17,7 +17,7 @@ class MedicineList extends StatefulWidget {
 class _MedicineListState extends State<MedicineList> {
   @override
   Widget build(BuildContext context) {
-    List<Widget> widgets = [];
+    final List<Widget> widgets = [];
     widgets
       ..add(ListHeader('Do wzięcia'))
       ..addAll(this
@@ -32,11 +32,7 @@ class _MedicineListState extends State<MedicineList> {
                 },
               ))
           .toList())
-      ..add(ListHeader('Wzięte'))
-      ..add(FlatButton(
-        child: Text('Zobacz archiwum'),
-        onPressed: () {},
-      ));
+      ..add(ListHeader('Wzięte'));
 
     return Column(children: widgets);
   }

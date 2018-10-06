@@ -4,13 +4,15 @@ class Medicine {
   final MedicineForm form;
   final List<String> activeSubstances;
   final int packageQuantity;
+  final Dosage dosage;
 
   const Medicine(
       {this.name,
       this.ean,
       this.form,
       this.activeSubstances,
-      this.packageQuantity});
+      this.packageQuantity,
+      this.dosage});
 
   bool isWarning() => true;
 }
@@ -23,4 +25,20 @@ enum MedicineForm {
   dialisys_solution, // roztwór do dializy otrzewnowej
   syrup, // syrop
   // more to come...
+}
+
+class Dosage {
+  final DosageFrequency frequency;
+  final int amountToTake;
+
+  const Dosage({this.frequency, this.amountToTake = 1});
+}
+
+enum DosageFrequency {
+  every_three_days,
+  every_two_days,
+  daily,
+  two_times_a_day,
+  three_times_a_day,
+  four_times_a_day
 }
