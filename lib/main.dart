@@ -6,6 +6,9 @@ void main() => runApp(new MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(title: 'Flutter Demo', home: HomeScreen());
+    return new MaterialApp(
+        title: 'LekBierz',
+        theme: ThemeData(primaryColor: Colors.teal),
+        home: HomeScreen());
   }
 }

@@ -5,7 +5,7 @@ import 'package:lek_bierz/ui/home/medicine_item.dart';
 
 class MedicineList extends StatefulWidget {
   final List<Medicine> medicines;
-  final Function(Medicine) onMedicineTap;
+  final Function(BuildContext, Medicine) onMedicineTap;
 
   const MedicineList({Key key, this.medicines = const [], this.onMedicineTap})
       : super(key: key);
@@ -27,7 +27,7 @@ class _MedicineListState extends State<MedicineList> {
                 medicine: medicine,
                 onMedicineTap: () {
                   if (this.widget.onMedicineTap != null) {
-                    this.widget.onMedicineTap(medicine);
+                    this.widget.onMedicineTap(context, medicine);
                   }
                 },
               ))

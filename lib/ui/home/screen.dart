@@ -8,11 +8,15 @@ class HomeScreen extends StatelessWidget {
     debugPrint('archive pressed lol');
   }
 
-  void _showMedicine(Medicine medicine) {
-    debugPrint('tapped on medicine with ean ' + medicine.ean.toString());
+  void _showMedicine(BuildContext context, Medicine medicine) {
+    Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text(
+            'You tapped on medicine with EAN of ' + medicine.ean.toString()),
+        duration: Duration(seconds: 3),
+        action: SnackBarAction(label: 'Oh, really?', onPressed: () {})));
   }
 
-  void _showAddingMedicine() {
+  void _showAddingMedicine(BuildContext context) {
     debugPrint('fab tapped');
   }
 
@@ -39,7 +43,8 @@ class HomeScreen extends StatelessWidget {
         children: <Widget>[
           MedicineList(
             medicines: medicines,
-            onMedicineTap: (medicine) => this._showMedicine(medicine),
+            onMedicineTap: (context, medicine) =>
+                this._showMedicine(context, medicine),
           ),
           FlatButton(
             child: Text('Zobacz archiwum'),
@@ -48,7 +53,7 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       floatingActionButton: AddMedicineFab(
-        onPress: () => this._showAddingMedicine(),
+        onPress: (context) => this._showAddingMedicine(context),
       ),
     );
   }
