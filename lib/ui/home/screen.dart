@@ -2,18 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:lek_bierz/models/medicine.dart';
 import 'package:lek_bierz/ui/home/medicine_list.dart';
 import 'package:lek_bierz/ui/home/add_medicine_fab.dart';
+import 'package:lek_bierz/ui/medicine/screen.dart';
 
 class HomeScreen extends StatelessWidget {
+  final _medicines = [
+    Medicine(
+        name: 'Izotek 10mg',
+        ean: 5909990891740,
+        activeSubstances: ['Isotretinoinum'],
+        form: MedicineForm.capsules,
+        packageQuantity: 60,
+        dosage: Dosage(frequency: DosageFrequency.daily))
+  ];
+
   void _showArchive() {
     debugPrint('archive pressed lol');
   }
 
   void _showMedicine(BuildContext context, Medicine medicine) {
-    Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text(
-            'You tapped on medicine with EAN of ' + medicine.ean.toString()),
-        duration: Duration(seconds: 3),
-        action: SnackBarAction(label: 'Oh, really?', onPressed: () {})));
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return MedicineScreen(medicine: medicine);
+    }));
   }
 
   void _showAddingMedicine(BuildContext context) {
@@ -22,16 +31,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final medicines = [
-      Medicine(
-          name: 'Izotek 10mg',
-          ean: 5909990891740,
-          activeSubstances: ['Isotretinoinum'],
-          form: MedicineForm.capsules,
-          packageQuantity: 60,
-          dosage: Dosage(frequency: DosageFrequency.daily))
-    ];
-
     return Scaffold(
       appBar: AppBar(title: Text('LekBierz'), actions: <Widget>[
         IconButton(
@@ -42,7 +41,7 @@ class HomeScreen extends StatelessWidget {
       body: Column(
         children: <Widget>[
           MedicineList(
-            medicines: medicines,
+            medicines: this._medicines,
             onMedicineTap: (context, medicine) =>
                 this._showMedicine(context, medicine),
           ),
