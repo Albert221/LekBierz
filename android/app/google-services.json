@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "755004053060",
+    "firebase_url": "https://lekbierz.firebaseio.com",
+    "project_id": "lekbierz",
+    "storage_bucket": "lekbierz.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:755004053060:android:7cf47a30ba3827a0",
+        "android_client_info": {
+          "package_name": "me.wolszon.lekbierz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "755004053060-9f9a2o4pd6pe4uhoo1l0mfsfvub5usq1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLixgtH6TZL8NHl7TiC4-uwWXRArqNe1Q"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
