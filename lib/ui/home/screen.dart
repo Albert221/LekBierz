@@ -3,6 +3,7 @@ import 'package:lek_bierz/models/medicine.dart';
 import 'package:lek_bierz/ui/home/medicine_list.dart';
 import 'package:lek_bierz/ui/home/add_medicine_fab.dart';
 import 'package:lek_bierz/ui/medicine/screen.dart';
+import 'package:lek_bierz/ui/scan/screen.dart';
 
 class HomeScreen extends StatelessWidget {
   final _medicines = [
@@ -33,6 +34,13 @@ class HomeScreen extends StatelessWidget {
 
   void _showAddingMedicine(BuildContext context) {
     debugPrint('fab tapped');
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return ScanScreen(
+        onBarcodeScanned: (barcode) {
+          debugPrint('siemano! $barcode');
+        },
+      );
+    }));
   }
 
   @override
