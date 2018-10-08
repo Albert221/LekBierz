@@ -12,7 +12,13 @@ class HomeScreen extends StatelessWidget {
         activeSubstances: ['Isotretinoinum'],
         form: MedicineForm.capsules,
         packageQuantity: 60,
-        dosage: Dosage(frequency: DosageFrequency.daily))
+        dosage: Dosage(frequency: DosageFrequency.daily),
+        doseHistory: [
+          Dose(
+              takenAt: DateTime.now(),
+              notes:
+                  'Lorem Ipsum jest tekstem stosowanym jako przykładowy wypełniacz w przemyśle poligraficznym. Został po raz pierwszy użyty w XV w. przez nieznanego drukarza do wypełnienia tekstem próbnej książki.')
+        ])
   ];
 
   void _showArchive() {

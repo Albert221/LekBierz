@@ -3,6 +3,7 @@ import 'package:lek_bierz/models/medicine.dart';
 import 'package:lek_bierz/ui/common/alert.dart';
 import 'package:lek_bierz/ui/common/chip_list.dart';
 import 'package:lek_bierz/ui/common/list_header.dart';
+import 'package:intl/intl.dart';
 
 class MedicineScreen extends StatefulWidget {
   final Medicine medicine;
@@ -14,6 +15,24 @@ class MedicineScreen extends StatefulWidget {
 }
 
 class MedicineScreenState extends State<MedicineScreen> {
+  List<Widget> _buildDoseHistorySection(BuildContext context) {
+    return [
+      ListHeader('Historia przyjęć'),
+      Expanded(
+          child: ListView.builder(
+              itemCount: this.widget.medicine.doseHistory.length,
+              itemBuilder: (BuildContext context, int i) {
+                final dose = this.widget.medicine.doseHistory[i];
+
+                return ListTile(
+                  title: Text(DateFormat('dd-MM-yyyy').format(dose.takenAt)),
+                  subtitle: Text(dose.notes),
+                  trailing: Text('przyjęto'.toUpperCase()),
+                );
+              }))
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     final medicine = this.widget.medicine;
@@ -39,9 +58,8 @@ class MedicineScreenState extends State<MedicineScreen> {
               child: ChipList(
                 contents: medicine.activeSubstances,
               )),
-          Divider(),
-          ListHeader('Historia przyjęć')
-        ],
+          Divider()
+        ]..addAll(this._buildDoseHistorySection(context)),
       ),
     );
   }

@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 class Medicine {
   final String name;
   final int ean;
@@ -5,6 +7,7 @@ class Medicine {
   final List<String> activeSubstances;
   final int packageQuantity;
   final Dosage dosage;
+  final List<Dose> doseHistory;
 
   const Medicine(
       {this.name,
@@ -12,7 +15,8 @@ class Medicine {
       this.form,
       this.activeSubstances,
       this.packageQuantity,
-      this.dosage});
+      this.dosage,
+      this.doseHistory});
 
   bool isWarning() => true;
 }
@@ -41,4 +45,11 @@ enum DosageFrequency {
   two_times_a_day,
   three_times_a_day,
   four_times_a_day
+}
+
+class Dose {
+  final DateTime takenAt;
+  final String notes;
+
+  const Dose({@required this.takenAt, this.notes});
 }
