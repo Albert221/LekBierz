@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lek_bierz/ui/home/screen.dart';
 
-void main() => runApp(new MyApp());
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
