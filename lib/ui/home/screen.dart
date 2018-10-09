@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lek_bierz/api/medicinal_products_repository.dart';
 import 'package:lek_bierz/models/medicine.dart';
 import 'package:lek_bierz/ui/home/medicine_list.dart';
 import 'package:lek_bierz/ui/home/add_medicine_fab.dart';
@@ -37,7 +38,14 @@ class HomeScreen extends StatelessWidget {
         builder: (context) => ScanScreen(), fullscreenDialog: true));
 
     if (barcode != null) {
-      debugPrint('zeskanowałem EAN: ' + barcode);
+      final repository = MedicinalProductsRepository();
+      final product = await repository.getProductByEan(barcode);
+
+      if (product == null) {
+        debugPrint('zeskanowałem EAN: $barcode');
+      } else {
+        debugPrint('zeskanowałem EAN: $barcode, produkt: ${product.name}');
+      }
     }
   }
 
