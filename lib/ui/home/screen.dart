@@ -32,17 +32,13 @@ class HomeScreen extends StatelessWidget {
     }));
   }
 
-  void _showAddingMedicine(BuildContext context) {
-    debugPrint('fab tapped');
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) {
-          return ScanScreen(
-            onBarcodeScanned: (barcode) {
-              debugPrint('siemano! $barcode');
-            },
-          );
-        },
-        fullscreenDialog: true));
+  void _showAddingMedicine(BuildContext context) async {
+    final String barcode = await Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => ScanScreen(), fullscreenDialog: true));
+
+    if (barcode != null) {
+      debugPrint('zeskanowałem EAN: ' + barcode);
+    }
   }
 
   @override
