@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:lek_bierz/api/medicinal_products_repository.dart';
+import 'package:lek_bierz/api/models/medicinal_product.dart';
 import 'package:lek_bierz/models/medicine.dart';
 import 'package:lek_bierz/ui/home/medicine_list.dart';
 import 'package:lek_bierz/ui/home/add_medicine_fab.dart';
 import 'package:lek_bierz/ui/medicine/screen.dart';
 import 'package:lek_bierz/ui/scan_dialog/screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  State createState() => HomeScreenState();
+}
+
+class HomeScreenState extends State<HomeScreen> {
   final _medicines = [
     Medicine(
         name: 'Izotek 10mg',
-        ean: 5909990891740,
+        ean: '5909990891740',
         activeSubstances: ['Isotretinoinum'],
         form: MedicineForm.capsules,
         packageQuantity: 60,
@@ -34,15 +39,20 @@ class HomeScreen extends StatelessWidget {
   }
 
   void _showAddingMedicine(BuildContext context) async {
-    final MedicinalProduct medProduct = await Navigator.of(context).push(
+    final MedicinalProductResponse response = await Navigator.of(context).push(
         MaterialPageRoute(
             builder: (context) => ScanScreen(), fullscreenDialog: true));
 
-    if (medProduct != null) {
-      Scaffold.of(context).showSnackBar(SnackBar(
-          content: Text(
-              'Zeskanowałem produkt ${medProduct.name} z substancjami: ${medProduct.activeSubstances.join(', ')}')));
-    }
+    final meds = response.product;
+
+    setState(() {
+      _medicines.add(Medicine(
+          name: meds.name,
+//        form: meds.form,
+          activeSubstances: meds.activeSubstances,
+          ean: response.ean,
+          doseHistory: []));
+    });
   }
 
   @override

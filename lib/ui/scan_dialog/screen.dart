@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:camera/camera.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:lek_bierz/api/medicinal_products_repository.dart';
+import 'package:lek_bierz/api/models/medicinal_product.dart';
 
 class ScanScreen extends StatefulWidget {
   @override
@@ -31,7 +32,7 @@ class ScanScreenState extends State<ScanScreen> {
     backCamera = (await availableCameras()).firstWhere(
         (camera) => camera.lensDirection == CameraLensDirection.back);
 
-    controller = CameraController(this.backCamera, ResolutionPreset.high);
+    controller = CameraController(this.backCamera, ResolutionPreset.medium);
     controller.initialize().then((_) {
       if (!this.mounted) {
         return;
@@ -143,24 +144,27 @@ class ScanScreenState extends State<ScanScreen> {
     }
 
     final String barcode = await _proccessPhoto(photoPath);
-    _hideWaitSpinner();
 
     if (barcode == null) {
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text('Nie znaleziono kodu kreskowego.'),
         duration: Duration(seconds: 2),
       ));
+      _hideWaitSpinner();
       return;
     }
 
-    final MedicinalProduct medProduct = await _fetchMedicinalProduct(barcode);
-    if (medProduct == null) {
+    final MedicinalProductResponse response = await _fetchMedicinalProduct(barcode);
+
+    _hideWaitSpinner();
+
+    if (response == null) {
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text('Zeskanowany produkt nie jest produktem leczniczym.'),
         duration: Duration(seconds: 2),
       ));
     } else {
-      Navigator.of(context).pop(medProduct);
+      Navigator.of(context).pop(response);
     }
   }
 
@@ -191,7 +195,7 @@ class ScanScreenState extends State<ScanScreen> {
     return null;
   }
 
-  Future<MedicinalProduct> _fetchMedicinalProduct(String ean) async {
+  Future<MedicinalProductResponse> _fetchMedicinalProduct(String ean) async {
     final repository = MedicinalProductsRepository();
 
     return repository.getProductByEan(ean);

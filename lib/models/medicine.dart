@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 
 class Medicine {
   final String name;
-  final int ean;
+  final String ean;
   final MedicineForm form;
   final List<String> activeSubstances;
   final int packageQuantity;
@@ -18,7 +18,7 @@ class Medicine {
       this.dosage,
       this.doseHistory});
 
-  bool isWarning() => true;
+  bool isWarning() => name != 'Rutinoscorbin';
 }
 
 enum MedicineForm {

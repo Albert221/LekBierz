@@ -15,6 +15,40 @@ class MedicineScreen extends StatefulWidget {
 }
 
 class MedicineScreenState extends State<MedicineScreen> {
+  @override
+  Widget build(BuildContext context) {
+    final medicine = this.widget.medicine;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(medicine.name),
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          widget.medicine.isWarning()
+              ? Alert(
+                  margin: EdgeInsets.all(16.0),
+                  type: AlertType.warning,
+                  content: 'Zapomniałeś wziąć leki!',
+                )
+              : null,
+          Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                  'W opakowaniu pozostało 56 z ${medicine.packageQuantity} tabletek.')),
+          Padding(
+              padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
+              child: ChipList(
+                contents: medicine.activeSubstances,
+              )),
+          Divider()
+        ].where((x) => x != null).toList()
+          ..addAll(this._buildDoseHistorySection(context)),
+      ),
+    );
+  }
+
   List<Widget> _buildDoseHistorySection(BuildContext context) {
     return [
       ListHeader('Historia przyjęć'),
@@ -31,36 +65,5 @@ class MedicineScreenState extends State<MedicineScreen> {
                 );
               }))
     ];
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final medicine = this.widget.medicine;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(medicine.name),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Alert(
-            margin: EdgeInsets.all(16.0),
-            type: AlertType.warning,
-            content: 'Zapomniałeś wziąć leki!',
-          ),
-          Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text(
-                  'W opakowaniu pozostało 56 z ${medicine.packageQuantity} tabletek.')),
-          Padding(
-              padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 16.0),
-              child: ChipList(
-                contents: medicine.activeSubstances,
-              )),
-          Divider()
-        ]..addAll(this._buildDoseHistorySection(context)),
-      ),
-    );
   }
 }
