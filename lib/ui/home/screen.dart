@@ -34,18 +34,14 @@ class HomeScreen extends StatelessWidget {
   }
 
   void _showAddingMedicine(BuildContext context) async {
-    final String barcode = await Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => ScanScreen(), fullscreenDialog: true));
+    final MedicinalProduct medProduct = await Navigator.of(context).push(
+        MaterialPageRoute(
+            builder: (context) => ScanScreen(), fullscreenDialog: true));
 
-    if (barcode != null) {
-      final repository = MedicinalProductsRepository();
-      final product = await repository.getProductByEan(barcode);
-
-      if (product == null) {
-        debugPrint('zeskanowałem EAN: $barcode');
-      } else {
-        debugPrint('zeskanowałem EAN: $barcode, produkt: ${product.name}');
-      }
+    if (medProduct != null) {
+      Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text(
+              'Zeskanowałem produkt ${medProduct.name} z substancjami: ${medProduct.activeSubstances.join(', ')}')));
     }
   }
 

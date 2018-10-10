@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:camera/camera.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
+import 'package:lek_bierz/api/medicinal_products_repository.dart';
 
 class ScanScreen extends StatefulWidget {
   @override
@@ -29,7 +31,7 @@ class ScanScreenState extends State<ScanScreen> {
     backCamera = (await availableCameras()).firstWhere(
         (camera) => camera.lensDirection == CameraLensDirection.back);
 
-    controller = CameraController(this.backCamera, ResolutionPreset.medium);
+    controller = CameraController(this.backCamera, ResolutionPreset.high);
     controller.initialize().then((_) {
       if (!this.mounted) {
         return;
@@ -145,11 +147,20 @@ class ScanScreenState extends State<ScanScreen> {
 
     if (barcode == null) {
       Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text('Nie znaleziono kodu kreskowego'),
+        content: Text('Nie znaleziono kodu kreskowego.'),
+        duration: Duration(seconds: 2),
+      ));
+      return;
+    }
+
+    final MedicinalProduct medProduct = await _fetchMedicinalProduct(barcode);
+    if (medProduct == null) {
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text('Zeskanowany produkt nie jest produktem leczniczym.'),
         duration: Duration(seconds: 2),
       ));
     } else {
-      Navigator.of(context).pop(barcode);
+      Navigator.of(context).pop(medProduct);
     }
   }
 
@@ -161,7 +172,12 @@ class ScanScreenState extends State<ScanScreen> {
     final BarcodeDetector barcodeDetector =
         FirebaseVision.instance.barcodeDetector();
 
-    final List<Barcode> barcodes = await barcodeDetector.detectInImage(photo);
+    List<Barcode> barcodes;
+    try {
+      barcodes = await barcodeDetector.detectInImage(photo);
+    } on PlatformException {
+      return null;
+    }
 
     for (Barcode barcode in barcodes) {
       if (barcode.format.value != BarcodeFormat.ean8.value &&
@@ -173,5 +189,11 @@ class ScanScreenState extends State<ScanScreen> {
     }
 
     return null;
+  }
+
+  Future<MedicinalProduct> _fetchMedicinalProduct(String ean) async {
+    final repository = MedicinalProductsRepository();
+
+    return repository.getProductByEan(ean);
   }
 }
