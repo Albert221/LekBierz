@@ -48,8 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
         body: Builder(builder: (BuildContext context) {
           screenContext = context;
 
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          return ListView(
             children: _buildBody(context),
           );
         }));
