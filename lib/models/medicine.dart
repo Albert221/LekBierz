@@ -18,7 +18,7 @@ class Medicine {
       this.dosage,
       this.doseHistory});
 
-  bool isWarning() => true;
+  bool isWarning() => name != 'Rutinoscorbin';
 }
 
 enum MedicineForm {
