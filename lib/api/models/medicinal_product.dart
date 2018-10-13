@@ -1,8 +1,32 @@
+import 'package:lek_bierz/models/medicine.dart';
+
 class MedicinalProductResponse {
   final MedicinalProduct product;
   final String ean;
 
   const MedicinalProductResponse({this.product, this.ean});
+
+  Medicine createMedicine() {
+    MedicineForm form;
+    if (product.form == "tabletki powlekane") {
+      form = MedicineForm.tablet;
+    } else if (product.form == "kapsułki elastyczne") {
+      form = MedicineForm.pill;
+    } else if (product.form == "syrop") {
+      form = MedicineForm.syrup;
+    } else {
+      form = MedicineForm.other;
+    }
+
+    return Medicine.create(
+        productData: MedicineData(
+            name: product.name,
+            form: form,
+            activeSubstances: product.activeSubstances,
+            ean: ean,
+            packageQuantity:
+                product.packages.firstWhere((pack) => pack.ean == ean).size));
+  }
 }
 
 class MedicinalProduct {

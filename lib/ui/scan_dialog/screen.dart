@@ -154,7 +154,8 @@ class ScanScreenState extends State<ScanScreen> {
       return;
     }
 
-    final MedicinalProductResponse response = await _fetchMedicinalProduct(barcode);
+    final MedicinalProductResponse response =
+        await _fetchMedicinalProduct(barcode);
 
     _hideWaitSpinner();
 

@@ -1,55 +1,94 @@
-import 'package:flutter/foundation.dart';
+import 'package:meta/meta.dart';
+import 'package:uuid/uuid.dart';
 
 class Medicine {
+  final String id;
+  final DateTime addedAt;
+
+  Dosing dosing;
+  bool archived = false;
+  DateTime archivedAt;
+
+  final MedicineData productData;
+  final List<HistoryDose> doseHistory;
+
+  Medicine(
+      {@required this.id,
+      @required this.addedAt,
+      @required this.productData,
+      this.dosing,
+      this.archived,
+      this.archivedAt,
+      this.doseHistory = const []});
+
+  factory Medicine.create({@required MedicineData productData, Dosing dosing}) {
+    return Medicine(
+        id: Uuid().v4(), addedAt: DateTime.now(), productData: productData);
+  }
+}
+
+enum MedicineForm { pill, tablet, syrup, other }
+
+class MedicineData {
   final String name;
-  final String ean;
   final MedicineForm form;
   final List<String> activeSubstances;
+  final String ean;
   final int packageQuantity;
-  final Dosage dosage;
-  final List<Dose> doseHistory;
 
-  const Medicine(
-      {this.name,
-      this.ean,
-      this.form,
-      this.activeSubstances,
-      this.packageQuantity,
-      this.dosage,
-      this.doseHistory});
-
-  bool isWarning() => name != 'Rutinoscorbin';
+  const MedicineData(
+      {@required this.name,
+      @required this.form,
+      @required this.activeSubstances,
+      @required this.ean,
+      @required this.packageQuantity});
 }
 
-enum MedicineForm {
-  capsules, // elastyczne kapsułki
-  film_coated_tablets, // tabletki powlekane
-  herbs, // zioła do zaparzania
-  prolonged_release_tablets, // tabletki o przedłużonym uwalnianiu
-  dialisys_solution, // roztwór do dializy otrzewnowej
-  syrup, // syrop
-  // more to come...
+enum DoseTime {
+  morning,
+  after_breakfast,
+  before_noon,
+  noon,
+  after_lunch,
+  before_dinner,
+  after_dinner,
+  before_sleep
 }
 
-class Dosage {
-  final DosageFrequency frequency;
-  final int amountToTake;
+enum HistoryDoseType { taken, taken_with_side_effects, skipped }
 
-  const Dosage({this.frequency, this.amountToTake = 1});
+class HistoryDose {
+  final DoseTime time;
+  final DateTime addedAt;
+  final String sideEffects;
+
+  const HistoryDose(
+      {@required this.time, @required this.addedAt, this.sideEffects});
+
+  HistoryDoseType get type {
+    if (addedAt == null) {
+      return HistoryDoseType.skipped;
+    }
+    if (sideEffects != null && sideEffects != '') {
+      return HistoryDoseType.taken_with_side_effects;
+    }
+
+    return HistoryDoseType.taken;
+  }
 }
 
-enum DosageFrequency {
-  every_three_days,
-  every_two_days,
+enum DosingFrequency {
   daily,
-  two_times_a_day,
-  three_times_a_day,
-  four_times_a_day
+  every_two_days,
+  every_three_days,
+  every_four_days,
+  every_five_days,
+  every_week
 }
 
-class Dose {
-  final DateTime takenAt;
-  final String notes;
+class Dosing {
+  final DosingFrequency frequency;
+  final List<DoseTime> times;
 
-  const Dose({@required this.takenAt, this.notes});
+  const Dosing({@required this.frequency, @required this.times});
 }

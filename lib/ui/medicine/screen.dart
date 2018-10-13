@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:lek_bierz/models/app_model.dart';
 import 'package:lek_bierz/models/medicine.dart';
 import 'package:lek_bierz/ui/common/app_bar.dart';
 import 'package:lek_bierz/ui/common/list_header.dart';
 import 'package:lek_bierz/ui/medicine/dose_history_item.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class MedicineScreen extends StatefulWidget {
-  final Medicine medicine;
+  final String medicineId;
 
-  const MedicineScreen({Key key, this.medicine}) : super(key: key);
+  const MedicineScreen({Key key, this.medicineId}) : super(key: key);
 
   @override
   State createState() => _MedicineScreenState();
@@ -16,32 +18,35 @@ class MedicineScreen extends StatefulWidget {
 class _MedicineScreenState extends State<MedicineScreen> {
   BuildContext screenContext;
 
-  bool dosingPresent = true;
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: CommonAppBar(
-          context: context,
-          title: Text(widget.medicine.name),
-          actions: [
-            IconButton(
-              icon: Icon(Icons.edit),
-              onPressed: () => this._editPressed(),
-            ),
-            IconButton(
-              icon: Icon(Icons.archive),
-              onPressed: () => this._archivePressed(),
-            )
-          ],
-        ),
-        body: Builder(builder: (BuildContext context) {
-          screenContext = context;
+    return ScopedModelDescendant<AppModel>(builder: (context, child, model) {
+      final medicine =
+          model.medicines.firstWhere((med) => med.id == widget.medicineId);
 
-          return ListView(
-            children: _buildBody(context),
-          );
-        }));
+      return Scaffold(
+          appBar: CommonAppBar(
+            context: context,
+            title: Text(medicine.productData.name),
+            actions: [
+              IconButton(
+                icon: Icon(Icons.edit),
+                onPressed: () => this._editPressed(),
+              ),
+              IconButton(
+                icon: Icon(Icons.archive),
+                onPressed: () => this._archivePressed(),
+              )
+            ],
+          ),
+          body: Builder(builder: (BuildContext context) {
+            screenContext = context;
+
+            return ListView(
+              children: _buildBody(context),
+            );
+          }));
+    });
   }
 
   List<Widget> _buildBody(BuildContext context) {
@@ -95,61 +100,121 @@ class _MedicineScreenState extends State<MedicineScreen> {
   Widget _buildDosing(BuildContext context) {
     return Padding(
         padding: EdgeInsets.only(bottom: 16.0),
-        child: Column(
-          children: [
-            ListHeader('Dawkowanie'),
-            dosingPresent
-                ? Row(
-                    children: [
-                      Chip(
-                        label: Text('Codziennie'),
-                      ),
-                      SizedBox(width: 8.0),
-                      Chip(label: Text('Rano')),
-                      SizedBox(width: 8.0),
-                      Chip(label: Text('Po południu')),
-                      SizedBox(width: 8.0),
-                      Chip(label: Text('Wieczorem')),
-                    ],
-                  )
-                : FlatButton(
-                    child: Row(mainAxisSize: MainAxisSize.min, children: [
-                      Icon(Icons.add_alert, color: Colors.white, size: 20.0),
-                      SizedBox(width: 8.0),
-                      Text('USTAW DAWKOWANIE',
-                          style: TextStyle(color: Colors.white))
-                    ]),
-                    color: Theme.of(context).primaryColor,
-                    onPressed: () => this._addDosingPressed(),
-                  ),
-          ],
-        ));
+        child: ScopedModelDescendant(builder: (context, child, AppModel model) {
+          final medicine =
+              model.medicines.firstWhere((med) => med.id == widget.medicineId);
+
+          return Column(
+            children: [
+              ListHeader('Dawkowanie'),
+              medicine.dosing != null
+                  ? Row(
+                      children: [
+                        Chip(
+                            label: Text(
+                                _getFrequencyTitle(medicine.dosing.frequency))),
+                        SizedBox(width: 8.0),
+                        Chip(label: Text('Rano')),
+                        SizedBox(width: 8.0),
+                        Chip(label: Text('Po południu')),
+                        SizedBox(width: 8.0),
+                        Chip(label: Text('Wieczorem')),
+                      ],
+                    )
+                  : FlatButton(
+                      child: Row(mainAxisSize: MainAxisSize.min, children: [
+                        Icon(Icons.add_alert, color: Colors.white, size: 20.0),
+                        SizedBox(width: 8.0),
+                        Text('USTAW DAWKOWANIE',
+                            style: TextStyle(color: Colors.white))
+                      ]),
+                      color: Theme.of(context).primaryColor,
+                      onPressed: () => this._addDosingPressed(),
+                    ),
+            ],
+          );
+        }));
+  }
+
+  String _getFrequencyTitle(DosingFrequency frequency) {
+    switch (frequency) {
+      case DosingFrequency.daily:
+        return 'Codziennie';
+      case DosingFrequency.every_two_days:
+        return 'Co dwa dni';
+      case DosingFrequency.every_three_days:
+        return 'Co trzy dni';
+      case DosingFrequency.every_four_days:
+        return 'Co cztery dni';
+      case DosingFrequency.every_five_days:
+        return 'Co pięć dni';
+      case DosingFrequency.every_week:
+        return 'Co tydzień';
+    }
+
+    return '';
+  }
+
+  String _getTimeTitle(DoseTime time) {
+    switch (time) {
+      case DoseTime.morning:
+        return 'Rano';
+      case DoseTime.after_breakfast:
+        return 'Po śniadaniu';
+      case DoseTime.before_noon:
+        return 'Przed południem';
+      case DoseTime.noon:
+        return 'Południe';
+      case DoseTime.after_lunch:
+        return 'Po obiedzie';
+      case DoseTime.before_dinner:
+        return 'Przed kolacją';
+      case DoseTime.after_dinner:
+        return 'Po kolacji';
+      case DoseTime.before_sleep:
+        return 'Przed snem';
+    }
+
+    return '';
   }
 
   Widget _buildDoseHistory(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0),
-          child: Row(
-            children: [
-              Expanded(child: ListHeader('Historia dawek')),
-              IconButton(
-                icon: Icon(Icons.filter_list),
-                onPressed: () {},
-              )
-            ],
+    return ScopedModelDescendant<AppModel>(builder: (context, child, model) {
+      final medicine =
+          model.medicines.firstWhere((med) => med.id == widget.medicineId);
+
+      final doses = medicine.doseHistory.map((dose) {
+        if (dose.type == HistoryDoseType.skipped) {
+          return DoseHistoryItem(
+              title: dose.type.toString(), type: DoseHistoryType.skipped);
+        }
+
+        return DoseHistoryItem(
+            title: dose.addedAt.toIso8601String(),
+            type: dose.type == HistoryDoseType.taken
+                ? DoseHistoryType.added
+                : DoseHistoryType.side_effect);
+      }).toList();
+
+      return Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
+              children: [
+                Expanded(child: ListHeader('Historia dawek')),
+                IconButton(
+                  icon: Icon(Icons.filter_list),
+                  onPressed: () {},
+                )
+              ],
+            ),
           ),
-        ),
-        DoseHistoryItem(
-            title: 'Dodaj kolejną dawkę', type: DoseHistoryType.add),
-        DoseHistoryItem(title: 'Dziś, 13:04', type: DoseHistoryType.added),
-        DoseHistoryItem(title: 'Dziś, 8:37', type: DoseHistoryType.side_effect),
-        DoseHistoryItem(
-            title: 'Wczoraj wieczorem', type: DoseHistoryType.skipped),
-        DoseHistoryItem(title: 'Wczoraj, 16:52', type: DoseHistoryType.added),
-      ],
-    );
+          DoseHistoryItem(
+              title: 'Dodaj kolejną dawkę', type: DoseHistoryType.add),
+        ]..addAll(doses),
+      );
+    });
   }
 
   void _editPressed() {
@@ -162,8 +227,6 @@ class _MedicineScreenState extends State<MedicineScreen> {
 
   void _moreDetailsPressed() {
     // todo
-
-    setState(() => dosingPresent = !dosingPresent);
   }
 
   void _addDosingPressed() {
