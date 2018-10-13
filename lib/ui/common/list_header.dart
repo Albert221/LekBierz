@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lek_bierz/main.dart';
 
 class ListHeader extends StatelessWidget {
   final String text;
@@ -8,11 +9,11 @@ class ListHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16.0),
+      padding: EdgeInsets.symmetric(vertical: 16.0),
       alignment: Alignment.centerLeft,
       child: Text(text.toUpperCase(),
           style: const TextStyle(
-              color: Colors.grey, fontSize: 14.0, fontWeight: FontWeight.w700)),
+              color: MyApp.grayColor, fontSize: 14.0, fontWeight: FontWeight.w700)),
     );
   }
 }
