@@ -1,7 +1,8 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-import 'package:lek_bierz/models/medicine.dart';
+import 'package:lek_bierz/models/medicinal_product.dart' as product;
+import 'package:uuid/uuid.dart';
 
 part 'state.g.dart';
 
@@ -38,6 +39,34 @@ abstract class Medicine implements Built<Medicine, MedicineBuilder> {
   static Serializer<Medicine> get serializer => _$medicineSerializer;
 
   factory Medicine([updates(MedicineBuilder b)]) = _$Medicine;
+
+  factory Medicine.fromMedicinalProduct(
+      product.MedicinalProductResponse response) {
+    MedicineForm form;
+    if (response.product.form == "tabletki powlekane") {
+      form = MedicineForm.tablet;
+    } else if (response.product.form == "kapsułki elastyczne") {
+      form = MedicineForm.pill;
+    } else if (response.product.form == "syrop") {
+      form = MedicineForm.syrup;
+    } else {
+      form = MedicineForm.other;
+    }
+
+    return Medicine((b) => b
+      ..id = Uuid().v4()
+      ..addedAt = DateTime.now()
+      ..archived = false
+      ..productData = MedicineData((b) => b
+        ..name = response.product.name
+        ..form = form
+        ..ean = response.ean
+        ..activeSubstances = response.product.activeSubstances.toBuilder()
+        ..packageQuantity = response.product.packages
+            .firstWhere((pack) => pack.ean == response.ean)
+            .size).toBuilder()
+      ..doseHistory = BuiltList<HistoryDose>().toBuilder());
+  }
 }
 
 class MedicineForm extends EnumClass {

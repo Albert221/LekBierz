@@ -1,9 +1,7 @@
-import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:lek_bierz/models/medicinal_product.dart' as products;
 import 'package:lek_bierz/main.dart';
-import 'package:lek_bierz/models/app_model.dart';
 import 'package:lek_bierz/redux/actions.dart';
 import 'package:lek_bierz/redux/state.dart';
 import 'package:lek_bierz/ui/common/app_bar.dart';
@@ -12,7 +10,6 @@ import 'package:lek_bierz/ui/home/medicine_item.dart';
 import 'package:lek_bierz/ui/medicine/screen.dart';
 import 'package:lek_bierz/ui/scan_dialog/screen.dart';
 import 'package:redux/redux.dart';
-import 'package:uuid/uuid.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -170,20 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (response == null) return;
 
-    // todo: build proper one
-    Medicine mockedMedicine = Medicine((b) => b
-      ..id = Uuid().v4()
-      ..addedAt = DateTime.now()
-      ..archived = false
-      ..productData = MedicineData((b) => b
-        ..name = 'Rutinoscorbin'
-        ..form = MedicineForm.tablet
-        ..ean = '4234234234'
-        ..activeSubstances = BuiltList<String>(['Azotan 7-potasu']).toBuilder()
-        ..packageQuantity = 60).toBuilder()
-      ..doseHistory = BuiltList<HistoryDose>().toBuilder());
-
-    store.dispatch(AddMedicineAction(mockedMedicine));
+    store.dispatch(AddMedicineAction(Medicine.fromMedicinalProduct(response)));
   }
 
   void _medicineItemTapped(Medicine medicine) {
