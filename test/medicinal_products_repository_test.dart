@@ -1,4 +1,4 @@
-import 'package:lek_bierz/api/models/medicinal_product.dart';
+import 'package:lek_bierz/models/medicinal_product.dart';
 import 'package:test/test.dart';
 import 'package:lek_bierz/api/medicinal_products_repository.dart';
 

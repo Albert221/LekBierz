@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:lek_bierz/models/app_model.dart';
-import 'package:lek_bierz/models/medicine.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:lek_bierz/redux/actions.dart';
+import 'package:lek_bierz/redux/state.dart';
 import 'package:lek_bierz/ui/common/app_bar.dart';
 import 'package:lek_bierz/ui/common/list_header.dart';
 import 'package:lek_bierz/ui/medicine/dose_history_item.dart';
-import 'package:scoped_model/scoped_model.dart';
+import 'package:redux/redux.dart';
 
 class MedicineScreen extends StatefulWidget {
   final String medicineId;
@@ -20,36 +21,36 @@ class _MedicineScreenState extends State<MedicineScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<AppModel>(builder: (context, child, model) {
-      final medicine =
-          model.medicines.firstWhere((med) => med.id == widget.medicineId);
+    return StoreConnector<LekBierzState, _ViewModel>(
+      converter: (store) => _ViewModel.from(store, widget.medicineId),
+      builder: (context, vm) {
+        return Scaffold(
+            appBar: CommonAppBar(
+              context: context,
+              title: Text(vm.medicine.productData.name),
+              actions: [
+                IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () => this._editPressed(),
+                ),
+                IconButton(
+                  icon: Icon(Icons.archive),
+                  onPressed: () => this._archivePressed(),
+                )
+              ],
+            ),
+            body: Builder(builder: (BuildContext context) {
+              screenContext = context;
 
-      return Scaffold(
-          appBar: CommonAppBar(
-            context: context,
-            title: Text(medicine.productData.name),
-            actions: [
-              IconButton(
-                icon: Icon(Icons.edit),
-                onPressed: () => this._editPressed(),
-              ),
-              IconButton(
-                icon: Icon(Icons.archive),
-                onPressed: () => this._archivePressed(),
-              )
-            ],
-          ),
-          body: Builder(builder: (BuildContext context) {
-            screenContext = context;
-
-            return ListView(
-              children: _buildBody(context),
-            );
-          }));
-    });
+              return ListView(
+                children: _buildBody(context, vm),
+              );
+            }));
+      },
+    );
   }
 
-  List<Widget> _buildBody(BuildContext context) {
+  List<Widget> _buildBody(BuildContext context, _ViewModel vm) {
     return [
       Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -60,8 +61,8 @@ class _MedicineScreenState extends State<MedicineScreen> {
       ),
       Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.0),
-          child: _buildDosing(context)),
-      _buildDoseHistory(context)
+          child: _buildDosing(context, vm)),
+      _buildDoseHistory(context, vm)
     ];
   }
 
@@ -97,58 +98,53 @@ class _MedicineScreenState extends State<MedicineScreen> {
         ));
   }
 
-  Widget _buildDosing(BuildContext context) {
+  Widget _buildDosing(BuildContext context, _ViewModel vm) {
     return Padding(
         padding: EdgeInsets.only(bottom: 16.0),
-        child: ScopedModelDescendant(builder: (context, child, AppModel model) {
-          final medicine =
-              model.medicines.firstWhere((med) => med.id == widget.medicineId);
-
-          return Column(
-            children: [
-              ListHeader('Dawkowanie'),
-              medicine.dosing != null
-                  ? Row(
-                      children: [
-                        Chip(
-                            label: Text(
-                                _getFrequencyTitle(medicine.dosing.frequency))),
-                        SizedBox(width: 8.0),
-                        Chip(label: Text('Rano')),
-                        SizedBox(width: 8.0),
-                        Chip(label: Text('Po południu')),
-                        SizedBox(width: 8.0),
-                        Chip(label: Text('Wieczorem')),
-                      ],
-                    )
-                  : FlatButton(
-                      child: Row(mainAxisSize: MainAxisSize.min, children: [
-                        Icon(Icons.add_alert, color: Colors.white, size: 20.0),
-                        SizedBox(width: 8.0),
-                        Text('USTAW DAWKOWANIE',
-                            style: TextStyle(color: Colors.white))
-                      ]),
-                      color: Theme.of(context).primaryColor,
-                      onPressed: () => this._addDosingPressed(),
-                    ),
-            ],
-          );
-        }));
+        child: Column(
+          children: [
+            ListHeader('Dawkowanie'),
+            vm.medicine.dosing != null
+                ? Row(
+                    children: [
+                      Chip(
+                          label: Text(_getFrequencyTitle(
+                              vm.medicine.dosing.frequency))),
+                      SizedBox(width: 8.0),
+                      Chip(label: Text('Rano')),
+                      SizedBox(width: 8.0),
+                      Chip(label: Text('Po południu')),
+                      SizedBox(width: 8.0),
+                      Chip(label: Text('Wieczorem')),
+                    ],
+                  )
+                : FlatButton(
+                    child: Row(mainAxisSize: MainAxisSize.min, children: [
+                      Icon(Icons.add_alert, color: Colors.white, size: 20.0),
+                      SizedBox(width: 8.0),
+                      Text('USTAW DAWKOWANIE',
+                          style: TextStyle(color: Colors.white))
+                    ]),
+                    color: Theme.of(context).primaryColor,
+                    onPressed: () => this._addDosingPressed(),
+                  ),
+          ],
+        ));
   }
 
   String _getFrequencyTitle(DosingFrequency frequency) {
     switch (frequency) {
       case DosingFrequency.daily:
         return 'Codziennie';
-      case DosingFrequency.every_two_days:
+      case DosingFrequency.everyTwoDays:
         return 'Co dwa dni';
-      case DosingFrequency.every_three_days:
+      case DosingFrequency.everyThreeDays:
         return 'Co trzy dni';
-      case DosingFrequency.every_four_days:
+      case DosingFrequency.everyFourDays:
         return 'Co cztery dni';
-      case DosingFrequency.every_five_days:
+      case DosingFrequency.everyFiveDays:
         return 'Co pięć dni';
-      case DosingFrequency.every_week:
+      case DosingFrequency.everyWeek:
         return 'Co tydzień';
     }
 
@@ -159,62 +155,60 @@ class _MedicineScreenState extends State<MedicineScreen> {
     switch (time) {
       case DoseTime.morning:
         return 'Rano';
-      case DoseTime.after_breakfast:
+      case DoseTime.afterBreakfast:
         return 'Po śniadaniu';
-      case DoseTime.before_noon:
+      case DoseTime.beforeNoon:
         return 'Przed południem';
       case DoseTime.noon:
         return 'Południe';
-      case DoseTime.after_lunch:
+      case DoseTime.afterLunch:
         return 'Po obiedzie';
-      case DoseTime.before_dinner:
+      case DoseTime.beforeDinner:
         return 'Przed kolacją';
-      case DoseTime.after_dinner:
+      case DoseTime.afterDinner:
         return 'Po kolacji';
-      case DoseTime.before_sleep:
+      case DoseTime.beforeSleep:
         return 'Przed snem';
     }
 
     return '';
   }
 
-  Widget _buildDoseHistory(BuildContext context) {
-    return ScopedModelDescendant<AppModel>(builder: (context, child, model) {
-      final medicine =
-          model.medicines.firstWhere((med) => med.id == widget.medicineId);
-
-      final doses = medicine.doseHistory.map((dose) {
-        if (dose.type == HistoryDoseType.skipped) {
-          return DoseHistoryItem(
-              title: dose.type.toString(), type: DoseHistoryType.skipped);
-        }
-
+  Widget _buildDoseHistory(BuildContext context, _ViewModel vm) {
+    final doses = vm.medicine.doseHistory.map((dose) {
+      if (dose.type == HistoryDoseType.skipped) {
         return DoseHistoryItem(
-            title: dose.addedAt.toIso8601String(),
-            type: dose.type == HistoryDoseType.taken
-                ? DoseHistoryType.added
-                : DoseHistoryType.side_effect);
-      }).toList();
+            title: dose.type.toString(), type: DoseHistoryType.skipped);
+      }
 
-      return Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Row(
-              children: [
-                Expanded(child: ListHeader('Historia dawek')),
-                IconButton(
-                  icon: Icon(Icons.filter_list),
-                  onPressed: () {},
-                )
-              ],
-            ),
+      return DoseHistoryItem(
+          title: dose.addedAt.toIso8601String(),
+          type: dose.type == HistoryDoseType.taken
+              ? DoseHistoryType.added
+              : DoseHistoryType.side_effect);
+    }).toList().reversed.toList();
+
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
+          child: Row(
+            children: [
+              Expanded(child: ListHeader('Historia dawek')),
+              IconButton(
+                icon: Icon(Icons.filter_list),
+                onPressed: () {},
+              )
+            ],
           ),
-          DoseHistoryItem(
-              title: 'Dodaj kolejną dawkę', type: DoseHistoryType.add),
-        ]..addAll(doses),
-      );
-    });
+        ),
+        DoseHistoryItem(
+          title: 'Dodaj kolejną dawkę',
+          type: DoseHistoryType.add,
+          onTap: () => this._addDosePressed(vm),
+        ),
+      ]..addAll(doses),
+    );
   }
 
   void _editPressed() {
@@ -231,5 +225,28 @@ class _MedicineScreenState extends State<MedicineScreen> {
 
   void _addDosingPressed() {
     // todo
+  }
+
+  void _addDosePressed(_ViewModel vm) {
+    HistoryDose dose = HistoryDose((b) => b
+      ..addedAt = DateTime.now()
+      ..time = DoseTime.afterLunch);
+
+    vm.addDose(dose);
+  }
+}
+
+class _ViewModel {
+  final Medicine medicine;
+  final Function(HistoryDose) addDose;
+
+  const _ViewModel({this.medicine, this.addDose});
+
+  factory _ViewModel.from(Store<LekBierzState> store, String id) {
+    return _ViewModel(
+        medicine: store.state.medicines.firstWhere((med) => med.id == id),
+        addDose: (HistoryDose dose) {
+          store.dispatch(AddHistoryDoseAction(id, dose));
+        });
   }
 }

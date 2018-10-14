@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:camera/camera.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:lek_bierz/api/medicinal_products_repository.dart';
-import 'package:lek_bierz/api/models/medicinal_product.dart';
+import 'package:lek_bierz/models/medicinal_product.dart' as products;
 
 class ScanScreen extends StatefulWidget {
   @override
@@ -154,7 +154,7 @@ class ScanScreenState extends State<ScanScreen> {
       return;
     }
 
-    final MedicinalProductResponse response =
+    final products.MedicinalProductResponse response =
         await _fetchMedicinalProduct(barcode);
 
     _hideWaitSpinner();
@@ -196,7 +196,7 @@ class ScanScreenState extends State<ScanScreen> {
     return null;
   }
 
-  Future<MedicinalProductResponse> _fetchMedicinalProduct(String ean) async {
+  Future<products.MedicinalProductResponse> _fetchMedicinalProduct(String ean) async {
     final repository = MedicinalProductsRepository();
 
     return repository.getProductByEan(ean);
