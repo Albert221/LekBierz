@@ -1,14 +1,18 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:lek_bierz/models/medicinal_product.dart' as products;
 import 'package:lek_bierz/main.dart';
 import 'package:lek_bierz/models/app_model.dart';
-import 'package:lek_bierz/models/medicine.dart';
+import 'package:lek_bierz/redux/actions.dart';
+import 'package:lek_bierz/redux/state.dart';
 import 'package:lek_bierz/ui/common/app_bar.dart';
 import 'package:lek_bierz/ui/common/list_header.dart';
 import 'package:lek_bierz/ui/home/medicine_item.dart';
 import 'package:lek_bierz/ui/medicine/screen.dart';
 import 'package:lek_bierz/ui/scan_dialog/screen.dart';
-import 'package:scoped_model/scoped_model.dart';
+import 'package:redux/redux.dart';
+import 'package:uuid/uuid.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -39,43 +43,48 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildBody(BuildContext context) {
-    return ScopedModelDescendant<AppModel>(builder: (context, child, model) {
-      return ListView(
-        children: [
-          Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: _buildAddMedicineButton(context)),
-          Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: ListHeader('Po południu')),
-          Column(
-              children: model.medicines
-                  .map((medicine) => MedicineItem(
-                        color: Theme.of(context).primaryColor,
-                        title: medicine.productData.name,
-                        icon: _mapMedicineFormToIcon(medicine.productData.form),
-                        onTap: () => this._medicineItemTapped(medicine),
-                      ))
-                  .toList()),
-          Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: ListHeader('Wzięte na dziś (zmockowane)')),
-          MedicineItem(
-            color: MyApp.grayColor,
-            title: 'Izotek 10mg',
-            icon: Icons.map,
-          ),
-          MedicineItem(
-            color: MyApp.grayColor,
-            title: 'Herbapect',
-            icon: Icons.vertical_align_bottom,
-          ),
-          Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: _buildArchiveButton(context)),
-        ],
-      );
-    });
+    return ListView(
+      children: [
+        Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: _buildAddMedicineButton(context)),
+        Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: ListHeader('Po południu')),
+        StoreConnector<LekBierzState, Iterable<Medicine>>(
+          converter: (store) =>
+              store.state.medicines.where((med) => !med.archived),
+          builder: (context, medicines) {
+            return Column(
+                children: medicines
+                    .map((medicine) => MedicineItem(
+                          color: Theme.of(context).primaryColor,
+                          title: medicine.productData.name,
+                          icon:
+                              _mapMedicineFormToIcon(medicine.productData.form),
+                          onTap: () => this._medicineItemTapped(medicine),
+                        ))
+                    .toList());
+          },
+        ),
+        Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: ListHeader('Wzięte na dziś (zmockowane)')),
+        MedicineItem(
+          color: MyApp.grayColor,
+          title: 'Izotek 10mg',
+          icon: Icons.map,
+        ),
+        MedicineItem(
+          color: MyApp.grayColor,
+          title: 'Herbapect',
+          icon: Icons.vertical_align_bottom,
+        ),
+        Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: _buildArchiveButton(context)),
+      ],
+    );
   }
 
   IconData _mapMedicineFormToIcon(MedicineForm form) {
@@ -108,16 +117,20 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             line,
             Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                child: ScopedModelDescendant<AppModel>(
-                    builder: (context, child, model) {
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              child: StoreConnector<LekBierzState, VoidCallback>(
+                converter: (store) =>
+                    () => this._addMedicineButtonPressed(store),
+                builder: (context, addMedicine) {
                   return FlatButton(
                     child: Text('DODAJ LEK'),
                     color: Theme.of(context).primaryColor,
                     textColor: Colors.white,
-                    onPressed: () => this._addMedicineButtonPressed(model),
+                    onPressed: addMedicine,
                   );
-                })),
+                },
+              ),
+            ),
             line
           ],
         ));
@@ -150,17 +163,32 @@ class _HomeScreenState extends State<HomeScreen> {
     // todo
   }
 
-  void _addMedicineButtonPressed(AppModel model) async {
-    final products.MedicinalProductResponse response = await Navigator.of(context).push(
-        MaterialPageRoute(
+  void _addMedicineButtonPressed(Store<LekBierzState> store) async {
+    final products.MedicinalProductResponse response =
+        await Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => ScanScreen(), fullscreenDialog: true));
 
     if (response == null) return;
-    model.addMedicine(Medicine.fromMedicinalProduct(response));
+
+    // todo: build proper one
+    Medicine mockedMedicine = Medicine((b) => b
+      ..id = Uuid().v4()
+      ..addedAt = DateTime.now()
+      ..archived = false
+      ..productData = MedicineData((b) => b
+        ..name = 'Rutinoscorbin'
+        ..form = MedicineForm.tablet
+        ..ean = '4234234234'
+        ..activeSubstances = BuiltList<String>(['Azotan 7-potasu']).toBuilder()
+        ..packageQuantity = 60).toBuilder()
+      ..doseHistory = BuiltList<HistoryDose>().toBuilder());
+
+    store.dispatch(AddMedicineAction(mockedMedicine));
   }
 
   void _medicineItemTapped(Medicine medicine) {
     Navigator.of(screenContext).push(MaterialPageRoute(
-        builder: (BuildContext context) => MedicineScreen(medicineId: medicine.id)));
+        builder: (BuildContext context) =>
+            MedicineScreen(medicineId: medicine.id)));
   }
 }

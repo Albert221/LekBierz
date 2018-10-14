@@ -18,13 +18,19 @@ abstract class LekBierzState
 
 abstract class Medicine implements Built<Medicine, MedicineBuilder> {
   String get id;
+
   DateTime get addedAt;
+
   @nullable
   Dosing get dosing;
+
   bool get archived;
+
   @nullable
   DateTime get archivedAt;
+
   MedicineData get productData;
+
   BuiltList<HistoryDose> get doseHistory;
 
   Medicine._();
@@ -47,11 +53,16 @@ class MedicineForm extends EnumClass {
   static MedicineForm valueOf(String name) => _$mfValueOf(name);
 }
 
-abstract class MedicineData implements Built<MedicineData, MedicineDataBuilder> {
+abstract class MedicineData
+    implements Built<MedicineData, MedicineDataBuilder> {
   String get name;
+
   MedicineForm get form;
+
   BuiltList<String> get activeSubstances;
+
   String get ean;
+
   int get packageQuantity;
 
   MedicineData._();
@@ -94,6 +105,8 @@ class HistoryDoseStatus extends EnumClass {
 
   static HistoryDoseStatus valueOf(String name) => _$hdsValueOf(name);
 }
+
+enum HistoryDoseType { taken, taken_with_side_effects, skipped }
 
 abstract class HistoryDose implements Built<HistoryDose, HistoryDoseBuilder> {
   DoseTime get time;
