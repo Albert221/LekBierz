@@ -186,7 +186,7 @@ class _MedicineScreenState extends State<MedicineScreen> {
           type: dose.type == HistoryDoseType.taken
               ? DoseHistoryType.added
               : DoseHistoryType.side_effect);
-    }).toList();
+    }).toList().reversed.toList();
 
     return Column(
       children: [
