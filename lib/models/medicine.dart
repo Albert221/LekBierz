@@ -1,5 +1,6 @@
 import 'package:meta/meta.dart';
 import 'package:uuid/uuid.dart';
+import 'package:lek_bierz/models/medicinal_product.dart' as product;
 
 class Medicine {
   final String id;
@@ -20,6 +21,29 @@ class Medicine {
       this.archived,
       this.archivedAt,
       this.doseHistory = const []});
+
+  factory Medicine.fromMedicinalProduct(product.MedicinalProductResponse response) {
+    MedicineForm form;
+    if (response.product.form == "tabletki powlekane") {
+      form = MedicineForm.tablet;
+    } else if (response.product.form == "kapsułki elastyczne") {
+      form = MedicineForm.pill;
+    } else if (response.product.form == "syrop") {
+      form = MedicineForm.syrup;
+    } else {
+      form = MedicineForm.other;
+    }
+
+    return Medicine.create(
+        productData: MedicineData(
+            name: response.product.name,
+            form: form,
+            activeSubstances: response.product.activeSubstances.toList(),
+            ean: response.ean,
+            packageQuantity: response.product.packages
+                .firstWhere((pack) => pack.ean == response.ean)
+                .size));
+  }
 
   factory Medicine.create({@required MedicineData productData, Dosing dosing}) {
     return Medicine(

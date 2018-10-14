@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lek_bierz/api/models/medicinal_product.dart';
+import 'package:lek_bierz/models/medicinal_product.dart' as products;
 import 'package:lek_bierz/main.dart';
 import 'package:lek_bierz/models/app_model.dart';
 import 'package:lek_bierz/models/medicine.dart';
@@ -151,12 +151,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _addMedicineButtonPressed(AppModel model) async {
-    final MedicinalProductResponse response = await Navigator.of(context).push(
+    final products.MedicinalProductResponse response = await Navigator.of(context).push(
         MaterialPageRoute(
             builder: (context) => ScanScreen(), fullscreenDialog: true));
 
     if (response == null) return;
-    model.addMedicine(response.createMedicine());
+    model.addMedicine(Medicine.fromMedicinalProduct(response));
   }
 
   void _medicineItemTapped(Medicine medicine) {

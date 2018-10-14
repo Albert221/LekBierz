@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
-import 'package:lek_bierz/api/models/medicinal_product.dart';
+import 'package:lek_bierz/models/medicinal_product.dart';
+import 'package:lek_bierz/models/serializers.dart';
 
 class MedicinalProductsRepository {
   static const String apiUrl = "https://publicdata.rocks/query";
@@ -29,8 +31,8 @@ class MedicinalProductsRepository {
               """
             }))
         .then((response) => response.body)
-        .then((body) => jsonDecode(body))
-        .then((json) => MedicinalProductResponse(
-            product: MedicinalProduct.fromJson(json), ean: ean));
+        .then((body) => serializers.deserializeWith(
+            MedicinalProductData.serializer, json.decode(body)))
+        .then((data) => MedicinalProductResponse(ean, data.data.product));
   }
 }
