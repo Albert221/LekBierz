@@ -2,14 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:lek_bierz/main.dart';
 
 class AddDoseDialog extends StatefulWidget {
+  final DateTime initialDateTime;
+  final String initialSideEffects;
+
+  const AddDoseDialog({Key key, this.initialDateTime, this.initialSideEffects})
+      : super(key: key);
+
   @override
   State createState() => _AddDoseDialogState();
 }
 
 class _AddDoseDialogState extends State<AddDoseDialog> {
-  TimeOfDay time = TimeOfDay.now();
-  DateTime date = DateTime.now();
-  TextEditingController sideEffectsController = TextEditingController();
+  TimeOfDay time;
+  DateTime date;
+  TextEditingController sideEffectsController;
+
+  @override
+  void initState() {
+    super.initState();
+    time = widget.initialDateTime != null
+        ? TimeOfDay(
+            hour: widget.initialDateTime.hour,
+            minute: widget.initialDateTime.minute)
+        : TimeOfDay.now();
+    date = widget.initialDateTime != null
+        ? DateTime(widget.initialDateTime.year, widget.initialDateTime.month,
+            widget.initialDateTime.day)
+        : DateTime.now();
+    sideEffectsController = TextEditingController()
+      ..text = widget.initialSideEffects;
+  }
 
   @override
   void dispose() {
