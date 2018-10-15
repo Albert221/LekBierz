@@ -212,7 +212,7 @@ class _MedicineScreenState extends State<MedicineScreen> {
           ),
         ),
         DoseHistoryItem(
-          title: 'Dodaj kolejną dawkę',
+          title: doses.length > 0 ? 'Dodaj kolejną dawkę' : 'Dodaj pierwszą dawkę',
           type: DoseHistoryType.add,
           onTap: () => this._addDosePressed(context, vm),
         ),
