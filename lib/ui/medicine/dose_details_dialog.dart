@@ -5,11 +5,14 @@ import 'package:lek_bierz/ui/medicine/dose_history_item.dart';
 
 class DoseDetailsDialog extends StatelessWidget {
   final HistoryDose dose;
-  final Function onEditTapped;
+  final Function(BuildContext) onEditTapped;
   final Function onDeleteTapped;
 
   const DoseDetailsDialog(
-      {Key key, @required this.dose, this.onEditTapped, this.onDeleteTapped})
+      {Key key,
+      @required this.dose,
+      @required this.onEditTapped,
+      @required this.onDeleteTapped})
       : super(key: key);
 
   @override
@@ -23,7 +26,7 @@ class DoseDetailsDialog extends StatelessWidget {
           ),
           IconButton(
               icon: Icon(Icons.edit, color: MyApp.grayColor),
-              onPressed: () => onEditTapped != null ? onEditTapped() : null),
+              onPressed: () => this._onEditTap(context)),
           IconButton(
               icon: Icon(
                 Icons.delete,
@@ -52,9 +55,12 @@ class DoseDetailsDialog extends StatelessWidget {
     );
   }
 
-  void _onDeleteTap(BuildContext context) {
-    if (onDeleteTapped != null) onDeleteTapped();
+  void _onEditTap(BuildContext context) async {
+    await onEditTapped(context);
+  }
 
+  void _onDeleteTap(BuildContext context) {
     Navigator.of(context).pop();
+    onDeleteTapped();
   }
 }

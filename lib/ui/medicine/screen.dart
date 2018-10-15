@@ -243,13 +243,15 @@ class _MedicineScreenState extends State<MedicineScreen> {
           return AddDoseDialog();
         });
 
-    HistoryDose dose = HistoryDose((b) => b
-      ..id = Uuid().v4()
-      ..addedAt = result.dateTime
-      ..time = DoseTime.afterLunch
-      ..sideEffects = result.sideEffects);
+    if (result != null) {
+      HistoryDose dose = HistoryDose((b) => b
+        ..id = Uuid().v4()
+        ..addedAt = result.dateTime
+        ..time = DoseTime.afterLunch
+        ..sideEffects = result.sideEffects);
 
-    vm.addDose(dose);
+      vm.addDose(dose);
+    }
   }
 
   void _dosePressed(BuildContext context, _ViewModel vm, HistoryDose dose) {
@@ -258,6 +260,24 @@ class _MedicineScreenState extends State<MedicineScreen> {
         builder: (BuildContext context) {
           return DoseDetailsDialog(
             dose: dose,
+            onEditTapped: (BuildContext context) async {
+              AddDoseDialogResult result = await showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AddDoseDialog(
+                      initialDateTime: dose.addedAt,
+                      initialSideEffects: dose.sideEffects,
+                    );
+                  });
+
+              if (result != null) {
+                vm.updateDose(dose.rebuild((b) => b
+                  ..addedAt = result.dateTime
+                  ..sideEffects = result.sideEffects));
+
+                Navigator.of(context).pop();
+              }
+            },
             onDeleteTapped: () => vm.removeDose(dose),
           );
         });
@@ -280,7 +300,7 @@ class _ViewModel {
           store.dispatch(AddHistoryDoseAction(id, dose));
         },
         updateDose: (HistoryDose dose) {
-          //
+          store.dispatch(UpdateHistoryDoseAction(id, dose));
         },
         removeDose: (HistoryDose dose) {
           store.dispatch(RemoveHistoryDoseAction(id, dose.id));

@@ -19,6 +19,19 @@ BuiltList<Medicine> medicinesReducer(BuiltList<Medicine> state, action) {
                 .rebuild((b) => b.add(action.dose))
                 .toBuilder())
           : med));
+  } else if (action is UpdateHistoryDoseAction) {
+    return state.rebuild((b) => b
+      ..map((med) => med.id == action.medicineId
+          ? med.rebuild((b) => b
+            ..doseHistory = b.doseHistory
+                .build()
+                .rebuild((b) => b.map((dose) => dose.id == action.dose.id
+                    ? dose.rebuild((b) => b
+                      ..addedAt = action.dose.addedAt
+                      ..sideEffects = action.dose.sideEffects)
+                    : dose))
+                .toBuilder())
+          : med));
   } else if (action is RemoveHistoryDoseAction) {
     return state.rebuild((b) => b
       ..map((med) => med.id == action.medicineId

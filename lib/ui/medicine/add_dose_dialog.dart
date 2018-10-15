@@ -10,6 +10,9 @@ class AddDoseDialog extends StatefulWidget {
 
   @override
   State createState() => _AddDoseDialogState();
+
+  bool _initialsPresent() =>
+      initialDateTime != null || initialSideEffects != null;
 }
 
 class _AddDoseDialogState extends State<AddDoseDialog> {
@@ -42,7 +45,7 @@ class _AddDoseDialogState extends State<AddDoseDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Dodaj dawkę'),
+      title: Text(widget._initialsPresent() ? 'Edytuj dawkę' : 'Dodaj dawkę'),
       contentPadding: EdgeInsets.only(top: 24.0),
       content: SingleChildScrollView(
           child: ListBody(children: [
@@ -70,7 +73,7 @@ class _AddDoseDialogState extends State<AddDoseDialog> {
           },
         ),
         FlatButton(
-          child: Text('DODAJ',
+          child: Text(widget._initialsPresent() ? 'ZAPISZ' : 'DODAJ',
               style: TextStyle(color: Theme.of(context).primaryColor)),
           onPressed: () => this._popResult(context),
         )
