@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:lek_bierz/main.dart';
 import 'package:lek_bierz/redux/actions.dart';
 import 'package:lek_bierz/redux/state.dart';
 import 'package:lek_bierz/ui/common/app_bar.dart';
@@ -31,16 +32,24 @@ class _MedicineScreenState extends State<MedicineScreen> {
             appBar: CommonAppBar(
               context: context,
               title: Text(vm.medicine.productData.name),
-              actions: [
-                IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: () => this._editPressed(),
-                ),
-                IconButton(
-                  icon: Icon(Icons.archive),
-                  onPressed: () => this._archivePressed(),
-                )
-              ],
+              actions: vm.medicine.archived
+                  ? [
+                      Container(
+                          alignment: Alignment.center,
+                          padding: EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Text('ZARCHIWIZOWANE',
+                              style: TextStyle(color: MyApp.grayColor)))
+                    ]
+                  : [
+                      IconButton(
+                        icon: Icon(Icons.edit),
+                        onPressed: () => this._editPressed(),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.archive),
+                        onPressed: () => vm.archiveMedicine(),
+                      )
+                    ],
             ),
             body: Builder(builder: (BuildContext context) {
               screenContext = context;
@@ -62,9 +71,11 @@ class _MedicineScreenState extends State<MedicineScreen> {
         padding: EdgeInsets.symmetric(horizontal: 16.0),
         child: _buildDescription(context),
       ),
-      Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0),
-          child: _buildDosing(context, vm)),
+      vm.medicine.archived
+          ? SizedBox()
+          : Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              child: _buildDosing(context, vm)),
       _buildDoseHistory(context, vm)
     ];
   }
@@ -211,20 +222,20 @@ class _MedicineScreenState extends State<MedicineScreen> {
             ],
           ),
         ),
-        DoseHistoryItem(
-          title: doses.length > 0 ? 'Dodaj kolejną dawkę' : 'Dodaj pierwszą dawkę',
-          type: DoseHistoryType.add,
-          onTap: () => this._addDosePressed(context, vm),
-        ),
+        vm.medicine.archived
+            ? SizedBox()
+            : DoseHistoryItem(
+                title: doses.length > 0
+                    ? 'Dodaj kolejną dawkę'
+                    : 'Dodaj pierwszą dawkę',
+                type: DoseHistoryType.add,
+                onTap: () => this._addDosePressed(context, vm),
+              ),
       ]..addAll(doses),
     );
   }
 
   void _editPressed() {
-    // todo
-  }
-
-  void _archivePressed() {
     // todo
   }
 
@@ -286,16 +297,25 @@ class _MedicineScreenState extends State<MedicineScreen> {
 
 class _ViewModel {
   final Medicine medicine;
+  final Function archiveMedicine;
   final Function(HistoryDose) addDose;
   final Function(HistoryDose) updateDose;
   final Function(HistoryDose) removeDose;
 
   const _ViewModel(
-      {this.medicine, this.addDose, this.updateDose, this.removeDose});
+      {this.medicine,
+      this.archiveMedicine,
+      this.addDose,
+      this.updateDose,
+      this.removeDose});
 
   factory _ViewModel.from(Store<LekBierzState> store, String id) {
+    final medicine = store.state.medicines.firstWhere((med) => med.id == id);
     return _ViewModel(
-        medicine: store.state.medicines.firstWhere((med) => med.id == id),
+        medicine: medicine,
+        archiveMedicine: () {
+          store.dispatch(ArchiveMedicineAction(medicine.id));
+        },
         addDose: (HistoryDose dose) {
           store.dispatch(AddHistoryDoseAction(id, dose));
         },

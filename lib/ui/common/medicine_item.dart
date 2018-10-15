@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lek_bierz/main.dart';
+import 'package:lek_bierz/redux/state.dart';
 
 class MedicineItem extends StatelessWidget {
   final Color color;
@@ -30,14 +32,39 @@ class MedicineItem extends StatelessWidget {
                   color: color,
                 )),
             SizedBox(width: 16.0),
-            Text(
-              title,
-              style: TextStyle(fontSize: 16.0),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(fontSize: 16.0),
+                ),
+                subtitle != null
+                    ? Text(
+                        subtitle,
+                        style:
+                            TextStyle(fontSize: 14.0, color: MyApp.grayColor),
+                      )
+                    : SizedBox()
+              ],
             )
           ],
         ),
       ),
       onTap: () => onTap != null ? onTap() : null,
     );
+  }
+
+  static IconData mapMedicineFormToIcon(MedicineForm form) {
+    switch (form) {
+      case MedicineForm.pill:
+        return Icons.toll;
+      case MedicineForm.tablet:
+        return Icons.add_circle;
+      case MedicineForm.syrup:
+        return Icons.pin_drop;
+      default:
+        return Icons.warning;
+    }
   }
 }

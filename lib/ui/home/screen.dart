@@ -4,9 +4,10 @@ import 'package:lek_bierz/models/medicinal_product.dart' as products;
 import 'package:lek_bierz/main.dart';
 import 'package:lek_bierz/redux/actions.dart';
 import 'package:lek_bierz/redux/state.dart';
+import 'package:lek_bierz/ui/archive/screen.dart';
 import 'package:lek_bierz/ui/common/app_bar.dart';
 import 'package:lek_bierz/ui/common/list_header.dart';
-import 'package:lek_bierz/ui/home/medicine_item.dart';
+import 'package:lek_bierz/ui/common/medicine_item.dart';
 import 'package:lek_bierz/ui/medicine/screen.dart';
 import 'package:lek_bierz/ui/scan_dialog/screen.dart';
 import 'package:redux/redux.dart';
@@ -57,11 +58,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     .map((medicine) => MedicineItem(
                           color: Theme.of(context).primaryColor,
                           title: medicine.productData.name,
-                          icon:
-                              _mapMedicineFormToIcon(medicine.productData.form),
+                          icon: MedicineItem.mapMedicineFormToIcon(
+                              medicine.productData.form),
                           onTap: () => this._medicineItemTapped(medicine),
                         ))
-                    .toList());
+                    .toList().reversed.toList());
           },
         ),
         Padding(
@@ -82,19 +83,6 @@ class _HomeScreenState extends State<HomeScreen> {
             child: _buildArchiveButton(context)),
       ],
     );
-  }
-
-  IconData _mapMedicineFormToIcon(MedicineForm form) {
-    switch (form) {
-      case MedicineForm.pill:
-        return Icons.toll;
-      case MedicineForm.tablet:
-        return Icons.add_circle;
-      case MedicineForm.syrup:
-        return Icons.pin_drop;
-      default:
-        return Icons.warning;
-    }
   }
 
   Widget _buildAddMedicineButton(BuildContext context) {
@@ -152,12 +140,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _archiveButtonPressed() {
-    Scaffold.of(screenContext).showSnackBar(SnackBar(
-      content: Text('Naciśnięto archiwum'),
-      duration: Duration(milliseconds: 500),
-    ));
-
-    // todo
+    Navigator.of(screenContext).push(
+        MaterialPageRoute(builder: (BuildContext context) => ArchiveScreen()));
   }
 
   void _addMedicineButtonPressed(Store<LekBierzState> store) async {

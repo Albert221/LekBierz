@@ -6,6 +6,12 @@ class AddMedicineAction {
   const AddMedicineAction(this.medicine);
 }
 
+class ArchiveMedicineAction {
+  final String medicineId;
+
+  const ArchiveMedicineAction(this.medicineId);
+}
+
 class AddHistoryDoseAction {
   final String medicineId;
   final HistoryDose dose;
