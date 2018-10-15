@@ -5,8 +5,10 @@ import 'package:lek_bierz/redux/state.dart';
 import 'package:lek_bierz/ui/common/app_bar.dart';
 import 'package:lek_bierz/ui/common/list_header.dart';
 import 'package:lek_bierz/ui/medicine/add_dose_dialog.dart';
+import 'package:lek_bierz/ui/medicine/dose_details_dialog.dart';
 import 'package:lek_bierz/ui/medicine/dose_history_item.dart';
 import 'package:redux/redux.dart';
+import 'package:uuid/uuid.dart';
 
 class MedicineScreen extends StatefulWidget {
   final String medicineId;
@@ -184,10 +186,12 @@ class _MedicineScreenState extends State<MedicineScreen> {
           }
 
           return DoseHistoryItem(
-              title: dose.addedAt.toIso8601String(),
-              type: dose.type == HistoryDoseType.taken
-                  ? DoseHistoryType.added
-                  : DoseHistoryType.side_effect);
+            title: dose.addedAt.toString(),
+            type: dose.type == HistoryDoseType.taken
+                ? DoseHistoryType.added
+                : DoseHistoryType.side_effect,
+            onTap: () => this._dosePressed(context, vm, dose),
+          );
         })
         .toList()
         .reversed
@@ -240,25 +244,46 @@ class _MedicineScreenState extends State<MedicineScreen> {
         });
 
     HistoryDose dose = HistoryDose((b) => b
+      ..id = Uuid().v4()
       ..addedAt = result.dateTime
       ..time = DoseTime.afterLunch
       ..sideEffects = result.sideEffects);
 
     vm.addDose(dose);
   }
+
+  void _dosePressed(BuildContext context, _ViewModel vm, HistoryDose dose) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return DoseDetailsDialog(
+            dose: dose,
+            onDeleteTapped: () => vm.removeDose(dose),
+          );
+        });
+  }
 }
 
 class _ViewModel {
   final Medicine medicine;
   final Function(HistoryDose) addDose;
+  final Function(HistoryDose) updateDose;
+  final Function(HistoryDose) removeDose;
 
-  const _ViewModel({this.medicine, this.addDose});
+  const _ViewModel(
+      {this.medicine, this.addDose, this.updateDose, this.removeDose});
 
   factory _ViewModel.from(Store<LekBierzState> store, String id) {
     return _ViewModel(
         medicine: store.state.medicines.firstWhere((med) => med.id == id),
         addDose: (HistoryDose dose) {
           store.dispatch(AddHistoryDoseAction(id, dose));
+        },
+        updateDose: (HistoryDose dose) {
+          //
+        },
+        removeDose: (HistoryDose dose) {
+          store.dispatch(RemoveHistoryDoseAction(id, dose.id));
         });
   }
 }

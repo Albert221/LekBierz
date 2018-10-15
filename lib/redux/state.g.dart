@@ -417,6 +417,8 @@ class _$HistoryDoseSerializer implements StructuredSerializer<HistoryDose> {
   Iterable serialize(Serializers serializers, HistoryDose object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
+      'id',
+      serializers.serialize(object.id, specifiedType: const FullType(String)),
       'time',
       serializers.serialize(object.time,
           specifiedType: const FullType(DoseTime)),
@@ -448,6 +450,10 @@ class _$HistoryDoseSerializer implements StructuredSerializer<HistoryDose> {
       iterator.moveNext();
       final dynamic value = iterator.current;
       switch (key) {
+        case 'id':
+          result.id = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
         case 'time':
           result.time = serializers.deserialize(value,
               specifiedType: const FullType(DoseTime)) as DoseTime;
@@ -981,6 +987,8 @@ class MedicineDataBuilder
 
 class _$HistoryDose extends HistoryDose {
   @override
+  final String id;
+  @override
   final DoseTime time;
   @override
   final DateTime addedAt;
@@ -990,7 +998,11 @@ class _$HistoryDose extends HistoryDose {
   factory _$HistoryDose([void updates(HistoryDoseBuilder b)]) =>
       (new HistoryDoseBuilder()..update(updates)).build();
 
-  _$HistoryDose._({this.time, this.addedAt, this.sideEffects}) : super._() {
+  _$HistoryDose._({this.id, this.time, this.addedAt, this.sideEffects})
+      : super._() {
+    if (id == null) {
+      throw new BuiltValueNullFieldError('HistoryDose', 'id');
+    }
     if (time == null) {
       throw new BuiltValueNullFieldError('HistoryDose', 'time');
     }
@@ -1007,6 +1019,7 @@ class _$HistoryDose extends HistoryDose {
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is HistoryDose &&
+        id == other.id &&
         time == other.time &&
         addedAt == other.addedAt &&
         sideEffects == other.sideEffects;
@@ -1015,12 +1028,14 @@ class _$HistoryDose extends HistoryDose {
   @override
   int get hashCode {
     return $jf($jc(
-        $jc($jc(0, time.hashCode), addedAt.hashCode), sideEffects.hashCode));
+        $jc($jc($jc(0, id.hashCode), time.hashCode), addedAt.hashCode),
+        sideEffects.hashCode));
   }
 
   @override
   String toString() {
     return (newBuiltValueToStringHelper('HistoryDose')
+          ..add('id', id)
           ..add('time', time)
           ..add('addedAt', addedAt)
           ..add('sideEffects', sideEffects))
@@ -1030,6 +1045,10 @@ class _$HistoryDose extends HistoryDose {
 
 class HistoryDoseBuilder implements Builder<HistoryDose, HistoryDoseBuilder> {
   _$HistoryDose _$v;
+
+  String _id;
+  String get id => _$this._id;
+  set id(String id) => _$this._id = id;
 
   DoseTime _time;
   DoseTime get time => _$this._time;
@@ -1047,6 +1066,7 @@ class HistoryDoseBuilder implements Builder<HistoryDose, HistoryDoseBuilder> {
 
   HistoryDoseBuilder get _$this {
     if (_$v != null) {
+      _id = _$v.id;
       _time = _$v.time;
       _addedAt = _$v.addedAt;
       _sideEffects = _$v.sideEffects;
@@ -1072,7 +1092,7 @@ class HistoryDoseBuilder implements Builder<HistoryDose, HistoryDoseBuilder> {
   _$HistoryDose build() {
     final _$result = _$v ??
         new _$HistoryDose._(
-            time: time, addedAt: addedAt, sideEffects: sideEffects);
+            id: id, time: time, addedAt: addedAt, sideEffects: sideEffects);
     replace(_$result);
     return _$result;
   }

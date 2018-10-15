@@ -57,7 +57,7 @@ class DoseHistoryItem extends StatelessWidget {
           ],
         ),
       ),
-      onTap: () => onTap != null ? onTap() : null,
+      onTap: onTap != null ? () => onTap() : null,
     );
   }
 }

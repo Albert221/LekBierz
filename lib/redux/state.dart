@@ -138,6 +138,7 @@ class HistoryDoseStatus extends EnumClass {
 enum HistoryDoseType { taken, taken_with_side_effects, skipped }
 
 abstract class HistoryDose implements Built<HistoryDose, HistoryDoseBuilder> {
+  String get id;
   DoseTime get time;
 
   @nullable
