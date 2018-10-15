@@ -4,6 +4,7 @@ import 'package:lek_bierz/redux/actions.dart';
 import 'package:lek_bierz/redux/state.dart';
 import 'package:lek_bierz/ui/common/app_bar.dart';
 import 'package:lek_bierz/ui/common/list_header.dart';
+import 'package:lek_bierz/ui/medicine/add_dose_dialog.dart';
 import 'package:lek_bierz/ui/medicine/dose_history_item.dart';
 import 'package:redux/redux.dart';
 
@@ -175,18 +176,22 @@ class _MedicineScreenState extends State<MedicineScreen> {
   }
 
   Widget _buildDoseHistory(BuildContext context, _ViewModel vm) {
-    final doses = vm.medicine.doseHistory.map((dose) {
-      if (dose.type == HistoryDoseType.skipped) {
-        return DoseHistoryItem(
-            title: dose.type.toString(), type: DoseHistoryType.skipped);
-      }
+    final doses = vm.medicine.doseHistory
+        .map((dose) {
+          if (dose.type == HistoryDoseType.skipped) {
+            return DoseHistoryItem(
+                title: dose.type.toString(), type: DoseHistoryType.skipped);
+          }
 
-      return DoseHistoryItem(
-          title: dose.addedAt.toIso8601String(),
-          type: dose.type == HistoryDoseType.taken
-              ? DoseHistoryType.added
-              : DoseHistoryType.side_effect);
-    }).toList().reversed.toList();
+          return DoseHistoryItem(
+              title: dose.addedAt.toIso8601String(),
+              type: dose.type == HistoryDoseType.taken
+                  ? DoseHistoryType.added
+                  : DoseHistoryType.side_effect);
+        })
+        .toList()
+        .reversed
+        .toList();
 
     return Column(
       children: [
@@ -205,7 +210,7 @@ class _MedicineScreenState extends State<MedicineScreen> {
         DoseHistoryItem(
           title: 'Dodaj kolejną dawkę',
           type: DoseHistoryType.add,
-          onTap: () => this._addDosePressed(vm),
+          onTap: () => this._addDosePressed(context, vm),
         ),
       ]..addAll(doses),
     );
@@ -227,10 +232,17 @@ class _MedicineScreenState extends State<MedicineScreen> {
     // todo
   }
 
-  void _addDosePressed(_ViewModel vm) {
+  void _addDosePressed(BuildContext context, _ViewModel vm) async {
+    AddDoseDialogResult result = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AddDoseDialog();
+        });
+
     HistoryDose dose = HistoryDose((b) => b
-      ..addedAt = DateTime.now()
-      ..time = DoseTime.afterLunch);
+      ..addedAt = result.dateTime
+      ..time = DoseTime.afterLunch
+      ..sideEffects = result.sideEffects);
 
     vm.addDose(dose);
   }
