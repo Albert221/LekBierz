@@ -1,15 +1,30 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lek_bierz/api/firebase_persistor.dart';
+import 'package:lek_bierz/models/serializers.dart';
 import 'package:lek_bierz/redux/state.dart';
 import 'package:lek_bierz/redux/reducers.dart';
 import 'package:lek_bierz/ui/home/screen.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux_logging/redux_logging.dart';
+import 'package:redux_persist_encoder/redux_persist_encoder.dart';
 
 void main() {
-  Store<LekBierzState> store = Store<LekBierzState>(rootReducer,
-      initialState: LekBierzState(), middleware: [LoggingMiddleware.printer()]);
+  final persistor = Persistor<LekBierzState>(
+      storage: FirebasePersistor(),
+      decoder: (data) =>
+          serializers.deserializeWith(LekBierzState.serializer, data),
+      encoder: (data) => json
+          .encode(serializers.serializeWith(LekBierzState.serializer, data)));
+
+  final store = Store<LekBierzState>(rootReducer,
+      initialState: LekBierzState(),
+      middleware: [persistor.createMiddleware(), LoggingMiddleware.printer()]);
+
+  persistor.load(store);
 
   runApp(MyApp(store: store));
 }

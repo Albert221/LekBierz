@@ -2,6 +2,7 @@ import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:lek_bierz/models/medicinal_product.dart' as product;
+import 'package:lek_bierz/models/serializers.dart';
 import 'package:uuid/uuid.dart';
 
 part 'state.g.dart';
@@ -15,12 +16,16 @@ abstract class LekBierzState
   static Serializer<LekBierzState> get serializer => _$lekBierzStateSerializer;
 
   factory LekBierzState([updates(LekBierzStateBuilder b)]) = _$LekBierzState;
+
+  Map toJSON() {
+    return serializers.serialize(this);
+  }
 }
 
 abstract class Medicine implements Built<Medicine, MedicineBuilder> {
   String get id;
 
-  DateTime get addedAt;
+  int get addedAt;
 
   @nullable
   Dosing get dosing;
@@ -28,7 +33,7 @@ abstract class Medicine implements Built<Medicine, MedicineBuilder> {
   bool get archived;
 
   @nullable
-  DateTime get archivedAt;
+  int get archivedAt;
 
   MedicineData get productData;
 
@@ -55,7 +60,7 @@ abstract class Medicine implements Built<Medicine, MedicineBuilder> {
 
     return Medicine((b) => b
       ..id = Uuid().v4()
-      ..addedAt = DateTime.now()
+      ..addedAt = DateTime.now().millisecondsSinceEpoch
       ..archived = false
       ..productData = MedicineData((b) => b
         ..name = response.product.name
@@ -76,6 +81,8 @@ class MedicineForm extends EnumClass {
   static const MedicineForm other = _$other;
 
   const MedicineForm._(String name) : super(name);
+
+  static Serializer<MedicineForm> get serializer => _$medicineFormSerializer;
 
   static BuiltSet<MedicineForm> get values => _$mfValues;
 
@@ -142,7 +149,7 @@ abstract class HistoryDose implements Built<HistoryDose, HistoryDoseBuilder> {
   DoseTime get time;
 
   @nullable
-  DateTime get addedAt;
+  int get addedAt;
 
   @nullable
   String get sideEffects;
