@@ -48,7 +48,8 @@ class DoseDetailsDialog extends StatelessWidget {
         Padding(
             padding: EdgeInsets.symmetric(horizontal: 8.0),
             child: DoseHistoryItem(
-                title: dose.addedAt.toString(),
+                title: DateTime.fromMillisecondsSinceEpoch(dose.addedAt)
+                    .toString(),
                 type: dose.type == HistoryDoseType.taken
                     ? DoseHistoryType.added
                     : DoseHistoryType.side_effect)),

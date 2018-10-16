@@ -17,13 +17,16 @@ class ArchiveScreen extends StatelessWidget {
                   .map((medicine) => MedicineItem(
                         color: Theme.of(context).primaryColor,
                         title: medicine.productData.name,
-                        subtitle: 'Zarchiwizowano ${medicine.archivedAt.toString()}',
+                        subtitle:
+                            'Zarchiwizowano ${DateTime.fromMillisecondsSinceEpoch(medicine.archivedAt).toString()}',
                         icon: MedicineItem.mapMedicineFormToIcon(
                             medicine.productData.form),
                         onTap: () =>
                             this._medicineItemTapped(context, medicine),
                       ))
-                  .toList().reversed.toList())),
+                  .toList()
+                  .reversed
+                  .toList())),
     );
   }
 
