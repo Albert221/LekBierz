@@ -7,19 +7,23 @@ class DoseDetailsDialog extends StatelessWidget {
   final HistoryDose dose;
   final Function(BuildContext) onEditTapped;
   final Function onDeleteTapped;
+  final bool readonly;
 
   const DoseDetailsDialog(
       {Key key,
       @required this.dose,
-      @required this.onEditTapped,
-      @required this.onDeleteTapped})
+      this.onEditTapped,
+      this.onDeleteTapped,
+      this.readonly = false})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return SimpleDialog(
-      titlePadding: EdgeInsets.only(left: 24.0, top: 12.0, right: 16.0),
-      title: Row(
+    Widget title;
+    if (readonly) {
+      title = Text('Dawka');
+    } else {
+      title = Row(
         children: [
           Expanded(
             child: Text('Dawka'),
@@ -34,7 +38,12 @@ class DoseDetailsDialog extends StatelessWidget {
               ),
               onPressed: () => this._onDeleteTap(context))
         ],
-      ),
+      );
+    }
+
+    return SimpleDialog(
+      titlePadding: EdgeInsets.only(left: 24.0, top: 12.0, right: 16.0),
+      title: title,
       children: [
         Padding(
             padding: EdgeInsets.symmetric(horizontal: 8.0),

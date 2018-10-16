@@ -289,6 +289,7 @@ class _MedicineScreenState extends State<MedicineScreen> {
                 Navigator.of(context).pop();
               }
             },
+            readonly: vm.medicine.archived,
             onDeleteTapped: () => vm.removeDose(dose),
           );
         });
