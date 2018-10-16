@@ -161,6 +161,8 @@ final BuiltSet<DosingFrequency> _$dfValues =
 Serializer<LekBierzState> _$lekBierzStateSerializer =
     new _$LekBierzStateSerializer();
 Serializer<Medicine> _$medicineSerializer = new _$MedicineSerializer();
+Serializer<MedicineForm> _$medicineFormSerializer =
+    new _$MedicineFormSerializer();
 Serializer<MedicineData> _$medicineDataSerializer =
     new _$MedicineDataSerializer();
 Serializer<DoseTime> _$doseTimeSerializer = new _$DoseTimeSerializer();
@@ -226,8 +228,7 @@ class _$MedicineSerializer implements StructuredSerializer<Medicine> {
       'id',
       serializers.serialize(object.id, specifiedType: const FullType(String)),
       'addedAt',
-      serializers.serialize(object.addedAt,
-          specifiedType: const FullType(DateTime)),
+      serializers.serialize(object.addedAt, specifiedType: const FullType(int)),
       'archived',
       serializers.serialize(object.archived,
           specifiedType: const FullType(bool)),
@@ -249,7 +250,7 @@ class _$MedicineSerializer implements StructuredSerializer<Medicine> {
       result
         ..add('archivedAt')
         ..add(serializers.serialize(object.archivedAt,
-            specifiedType: const FullType(DateTime)));
+            specifiedType: const FullType(int)));
     }
 
     return result;
@@ -272,7 +273,7 @@ class _$MedicineSerializer implements StructuredSerializer<Medicine> {
           break;
         case 'addedAt':
           result.addedAt = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(int)) as int;
           break;
         case 'dosing':
           result.dosing.replace(serializers.deserialize(value,
@@ -284,7 +285,7 @@ class _$MedicineSerializer implements StructuredSerializer<Medicine> {
           break;
         case 'archivedAt':
           result.archivedAt = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(int)) as int;
           break;
         case 'productData':
           result.productData.replace(serializers.deserialize(value,
@@ -301,6 +302,23 @@ class _$MedicineSerializer implements StructuredSerializer<Medicine> {
 
     return result.build();
   }
+}
+
+class _$MedicineFormSerializer implements PrimitiveSerializer<MedicineForm> {
+  @override
+  final Iterable<Type> types = const <Type>[MedicineForm];
+  @override
+  final String wireName = 'MedicineForm';
+
+  @override
+  Object serialize(Serializers serializers, MedicineForm object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      object.name;
+
+  @override
+  MedicineForm deserialize(Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      MedicineForm.valueOf(serialized as String);
 }
 
 class _$MedicineDataSerializer implements StructuredSerializer<MedicineData> {
@@ -427,7 +445,7 @@ class _$HistoryDoseSerializer implements StructuredSerializer<HistoryDose> {
       result
         ..add('addedAt')
         ..add(serializers.serialize(object.addedAt,
-            specifiedType: const FullType(DateTime)));
+            specifiedType: const FullType(int)));
     }
     if (object.sideEffects != null) {
       result
@@ -460,7 +478,7 @@ class _$HistoryDoseSerializer implements StructuredSerializer<HistoryDose> {
           break;
         case 'addedAt':
           result.addedAt = serializers.deserialize(value,
-              specifiedType: const FullType(DateTime)) as DateTime;
+              specifiedType: const FullType(int)) as int;
           break;
         case 'sideEffects':
           result.sideEffects = serializers.deserialize(value,
@@ -638,13 +656,13 @@ class _$Medicine extends Medicine {
   @override
   final String id;
   @override
-  final DateTime addedAt;
+  final int addedAt;
   @override
   final Dosing dosing;
   @override
   final bool archived;
   @override
-  final DateTime archivedAt;
+  final int archivedAt;
   @override
   final MedicineData productData;
   @override
@@ -734,9 +752,9 @@ class MedicineBuilder implements Builder<Medicine, MedicineBuilder> {
   String get id => _$this._id;
   set id(String id) => _$this._id = id;
 
-  DateTime _addedAt;
-  DateTime get addedAt => _$this._addedAt;
-  set addedAt(DateTime addedAt) => _$this._addedAt = addedAt;
+  int _addedAt;
+  int get addedAt => _$this._addedAt;
+  set addedAt(int addedAt) => _$this._addedAt = addedAt;
 
   DosingBuilder _dosing;
   DosingBuilder get dosing => _$this._dosing ??= new DosingBuilder();
@@ -746,9 +764,9 @@ class MedicineBuilder implements Builder<Medicine, MedicineBuilder> {
   bool get archived => _$this._archived;
   set archived(bool archived) => _$this._archived = archived;
 
-  DateTime _archivedAt;
-  DateTime get archivedAt => _$this._archivedAt;
-  set archivedAt(DateTime archivedAt) => _$this._archivedAt = archivedAt;
+  int _archivedAt;
+  int get archivedAt => _$this._archivedAt;
+  set archivedAt(int archivedAt) => _$this._archivedAt = archivedAt;
 
   MedicineDataBuilder _productData;
   MedicineDataBuilder get productData =>
@@ -991,7 +1009,7 @@ class _$HistoryDose extends HistoryDose {
   @override
   final DoseTime time;
   @override
-  final DateTime addedAt;
+  final int addedAt;
   @override
   final String sideEffects;
 
@@ -1054,9 +1072,9 @@ class HistoryDoseBuilder implements Builder<HistoryDose, HistoryDoseBuilder> {
   DoseTime get time => _$this._time;
   set time(DoseTime time) => _$this._time = time;
 
-  DateTime _addedAt;
-  DateTime get addedAt => _$this._addedAt;
-  set addedAt(DateTime addedAt) => _$this._addedAt = addedAt;
+  int _addedAt;
+  int get addedAt => _$this._addedAt;
+  set addedAt(int addedAt) => _$this._addedAt = addedAt;
 
   String _sideEffects;
   String get sideEffects => _$this._sideEffects;

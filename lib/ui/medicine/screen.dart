@@ -34,22 +34,22 @@ class _MedicineScreenState extends State<MedicineScreen> {
               title: Text(vm.medicine.productData.name),
               actions: vm.medicine.archived
                   ? [
-                      Container(
-                          alignment: Alignment.center,
-                          padding: EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Text('ZARCHIWIZOWANE',
-                              style: TextStyle(color: MyApp.grayColor)))
-                    ]
+                Container(
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text('ZARCHIWIZOWANE',
+                        style: TextStyle(color: MyApp.grayColor)))
+              ]
                   : [
-                      IconButton(
-                        icon: Icon(Icons.edit),
-                        onPressed: () => this._editPressed(),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.archive),
-                        onPressed: () => vm.archiveMedicine(),
-                      )
-                    ],
+                IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () => this._editPressed(),
+                ),
+                IconButton(
+                  icon: Icon(Icons.archive),
+                  onPressed: () => vm.archiveMedicine(),
+                )
+              ],
             ),
             body: Builder(builder: (BuildContext context) {
               screenContext = context;
@@ -74,8 +74,8 @@ class _MedicineScreenState extends State<MedicineScreen> {
       vm.medicine.archived
           ? SizedBox()
           : Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: _buildDosing(context, vm)),
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
+          child: _buildDosing(context, vm)),
       _buildDoseHistory(context, vm)
     ];
   }
@@ -120,28 +120,30 @@ class _MedicineScreenState extends State<MedicineScreen> {
             ListHeader('Dawkowanie'),
             vm.medicine.dosing != null
                 ? Row(
-                    children: [
-                      Chip(
-                          label: Text(_getFrequencyTitle(
-                              vm.medicine.dosing.frequency))),
-                      SizedBox(width: 8.0),
-                      Chip(label: Text('Rano')),
-                      SizedBox(width: 8.0),
-                      Chip(label: Text('Po południu')),
-                      SizedBox(width: 8.0),
-                      Chip(label: Text('Wieczorem')),
-                    ],
-                  )
+              children: [
+                Chip(
+                    label: Text(_getFrequencyTitle(
+                        vm.medicine.dosing.frequency))),
+                SizedBox(width: 8.0),
+                Chip(label: Text('Rano')),
+                SizedBox(width: 8.0),
+                Chip(label: Text('Po południu')),
+                SizedBox(width: 8.0),
+                Chip(label: Text('Wieczorem')),
+              ],
+            )
                 : FlatButton(
-                    child: Row(mainAxisSize: MainAxisSize.min, children: [
-                      Icon(Icons.add_alert, color: Colors.white, size: 20.0),
-                      SizedBox(width: 8.0),
-                      Text('USTAW DAWKOWANIE',
-                          style: TextStyle(color: Colors.white))
-                    ]),
-                    color: Theme.of(context).primaryColor,
-                    onPressed: () => this._addDosingPressed(),
-                  ),
+              child: Row(mainAxisSize: MainAxisSize.min, children: [
+                Icon(Icons.add_alert, color: Colors.white, size: 20.0),
+                SizedBox(width: 8.0),
+                Text('USTAW DAWKOWANIE',
+                    style: TextStyle(color: Colors.white))
+              ]),
+              color: Theme
+                  .of(context)
+                  .primaryColor,
+              onPressed: () => this._addDosingPressed(),
+            ),
           ],
         ));
   }
@@ -191,19 +193,19 @@ class _MedicineScreenState extends State<MedicineScreen> {
   Widget _buildDoseHistory(BuildContext context, _ViewModel vm) {
     final doses = vm.medicine.doseHistory
         .map((dose) {
-          if (dose.type == HistoryDoseType.skipped) {
-            return DoseHistoryItem(
-                title: dose.type.toString(), type: DoseHistoryType.skipped);
-          }
+      if (dose.type == HistoryDoseType.skipped) {
+        return DoseHistoryItem(
+            title: dose.type.toString(), type: DoseHistoryType.skipped);
+      }
 
-          return DoseHistoryItem(
-            title: dose.addedAt.toString(),
-            type: dose.type == HistoryDoseType.taken
-                ? DoseHistoryType.added
-                : DoseHistoryType.side_effect,
-            onTap: () => this._dosePressed(context, vm, dose),
-          );
-        })
+      return DoseHistoryItem(
+        title: dose.addedAt.toString(),
+        type: dose.type == HistoryDoseType.taken
+            ? DoseHistoryType.added
+            : DoseHistoryType.side_effect,
+        onTap: () => this._dosePressed(context, vm, dose),
+      );
+    })
         .toList()
         .reversed
         .toList();
@@ -225,13 +227,14 @@ class _MedicineScreenState extends State<MedicineScreen> {
         vm.medicine.archived
             ? SizedBox()
             : DoseHistoryItem(
-                title: doses.length > 0
-                    ? 'Dodaj kolejną dawkę'
-                    : 'Dodaj pierwszą dawkę',
-                type: DoseHistoryType.add,
-                onTap: () => this._addDosePressed(context, vm),
-              ),
-      ]..addAll(doses),
+          title: doses.length > 0
+              ? 'Dodaj kolejną dawkę'
+              : 'Dodaj pierwszą dawkę',
+          type: DoseHistoryType.add,
+          onTap: () => this._addDosePressed(context, vm),
+        ),
+      ]
+        ..addAll(doses),
     );
   }
 
@@ -255,9 +258,10 @@ class _MedicineScreenState extends State<MedicineScreen> {
         });
 
     if (result != null) {
-      HistoryDose dose = HistoryDose((b) => b
+      HistoryDose dose = HistoryDose((b) =>
+      b
         ..id = Uuid().v4()
-        ..addedAt = result.dateTime
+        ..addedAt = result.dateTime.millisecondsSinceEpoch
         ..time = DoseTime.afterLunch
         ..sideEffects = result.sideEffects);
 
@@ -276,14 +280,16 @@ class _MedicineScreenState extends State<MedicineScreen> {
                   context: context,
                   builder: (BuildContext context) {
                     return AddDoseDialog(
-                      initialDateTime: dose.addedAt,
+                      initialDateTime: DateTime.fromMicrosecondsSinceEpoch(
+                          dose.addedAt),
                       initialSideEffects: dose.sideEffects,
                     );
                   });
 
               if (result != null) {
-                vm.updateDose(dose.rebuild((b) => b
-                  ..addedAt = result.dateTime
+                vm.updateDose(dose.rebuild((b) =>
+                b
+                  ..addedAt = result.dateTime.millisecondsSinceEpoch
                   ..sideEffects = result.sideEffects));
 
                 Navigator.of(context).pop();
@@ -303,12 +309,11 @@ class _ViewModel {
   final Function(HistoryDose) updateDose;
   final Function(HistoryDose) removeDose;
 
-  const _ViewModel(
-      {this.medicine,
-      this.archiveMedicine,
-      this.addDose,
-      this.updateDose,
-      this.removeDose});
+  const _ViewModel({this.medicine,
+    this.archiveMedicine,
+    this.addDose,
+    this.updateDose,
+    this.removeDose});
 
   factory _ViewModel.from(Store<LekBierzState> store, String id) {
     final medicine = store.state.medicines.firstWhere((med) => med.id == id);

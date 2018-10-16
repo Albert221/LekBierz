@@ -19,8 +19,12 @@ dependencies:
   redux: ^3.0.0
   flutter_redux: ^0.5.2
   redux_logging: ^0.3.0
+#  redux_persist: ^0.7.0 # Use it once encoder will be added
+  redux_persist_encoder: ^0.7.0-rc.5
   built_value: ^6.1.4
   built_collection: ^4.0.0
+
+  cloud_firestore: ^0.8.1+1
 
   scoped_model: ^0.3.0
   http: ^0.11.3

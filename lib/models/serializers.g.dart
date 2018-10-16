@@ -20,10 +20,30 @@ part of 'serializers.dart';
 // ignore_for_file: test_types_in_equals
 
 Serializers _$serializers = (new Serializers().toBuilder()
+      ..add(DoseTime.serializer)
+      ..add(Dosing.serializer)
+      ..add(DosingFrequency.serializer)
+      ..add(HistoryDose.serializer)
+      ..add(LekBierzState.serializer)
       ..add(MedicinalProduct.serializer)
       ..add(MedicinalProductData.serializer)
       ..add(MedicinalProductDataProduct.serializer)
+      ..add(Medicine.serializer)
+      ..add(MedicineData.serializer)
+      ..add(MedicineForm.serializer)
       ..add(Package.serializer)
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(DoseTime)]),
+          () => new ListBuilder<DoseTime>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(HistoryDose)]),
+          () => new ListBuilder<HistoryDose>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(Medicine)]),
+          () => new ListBuilder<Medicine>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(String)]),
+          () => new ListBuilder<String>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(String)]),
           () => new ListBuilder<String>())

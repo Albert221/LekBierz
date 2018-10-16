@@ -1,10 +1,15 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:lek_bierz/redux/actions.dart';
 import 'package:lek_bierz/redux/state.dart';
+import 'package:redux_persist_encoder/redux_persist_encoder.dart';
 
 LekBierzState rootReducer(LekBierzState state, action) {
-  return state.rebuild((b) =>
-      b..medicines = medicinesReducer(state.medicines, action).toBuilder());
+  if (action is PersistLoadedAction<LekBierzState>) {
+    return action.state ?? state;
+  } else {
+    return state.rebuild((b) =>
+        b..medicines = medicinesReducer(state.medicines, action).toBuilder());
+  }
 }
 
 BuiltList<Medicine> medicinesReducer(BuiltList<Medicine> state, action) {
@@ -24,7 +29,7 @@ BuiltList<Medicine> medicinesReducer(BuiltList<Medicine> state, action) {
       ..map((med) => med.id == action.medicineId
           ? med.rebuild((b) => b
             ..archived = true
-            ..archivedAt = DateTime.now())
+            ..archivedAt = DateTime.now().millisecondsSinceEpoch)
           : med));
   } else if (action is UpdateHistoryDoseAction) {
     return state.rebuild((b) => b
