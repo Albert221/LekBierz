@@ -5,6 +5,7 @@ import 'package:lek_bierz/redux/actions.dart';
 import 'package:lek_bierz/redux/state.dart';
 import 'package:lek_bierz/ui/common/app_bar.dart';
 import 'package:lek_bierz/ui/common/list_header.dart';
+import 'package:lek_bierz/ui/common/time.dart';
 import 'package:lek_bierz/ui/medicine/add_dose_dialog.dart';
 import 'package:lek_bierz/ui/medicine/dose_details_dialog.dart';
 import 'package:lek_bierz/ui/medicine/dose_history_item.dart';
@@ -197,7 +198,7 @@ class _MedicineScreenState extends State<MedicineScreen> {
           }
 
           return DoseHistoryItem(
-            title: DateTime.fromMillisecondsSinceEpoch(dose.addedAt).toString(),
+            title: displayDateAndTime(dose.addedAt),
             type: dose.type == HistoryDoseType.taken
                 ? DoseHistoryType.added
                 : DoseHistoryType.side_effect,

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:lek_bierz/api/firebase_persistor.dart';
 import 'package:lek_bierz/models/serializers.dart';
 import 'package:lek_bierz/redux/state.dart';

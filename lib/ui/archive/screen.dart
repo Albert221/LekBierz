@@ -3,6 +3,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:lek_bierz/redux/state.dart';
 import 'package:lek_bierz/ui/common/app_bar.dart';
 import 'package:lek_bierz/ui/common/medicine_item.dart';
+import 'package:lek_bierz/ui/common/time.dart';
 import 'package:lek_bierz/ui/medicine/screen.dart';
 
 class ArchiveScreen extends StatelessWidget {
@@ -18,7 +19,7 @@ class ArchiveScreen extends StatelessWidget {
                         color: Theme.of(context).primaryColor,
                         title: medicine.productData.name,
                         subtitle:
-                            'Zarchiwizowano ${DateTime.fromMillisecondsSinceEpoch(medicine.archivedAt).toString()}',
+                            'Zarchiwizowano: ${displayDate(medicine.archivedAt).toString()}',
                         icon: MedicineItem.mapMedicineFormToIcon(
                             medicine.productData.form),
                         onTap: () =>

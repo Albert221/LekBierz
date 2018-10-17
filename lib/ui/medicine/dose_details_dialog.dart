@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lek_bierz/main.dart';
 import 'package:lek_bierz/redux/state.dart';
+import 'package:lek_bierz/ui/common/time.dart';
 import 'package:lek_bierz/ui/medicine/dose_history_item.dart';
 
 class DoseDetailsDialog extends StatelessWidget {
@@ -48,8 +49,7 @@ class DoseDetailsDialog extends StatelessWidget {
         Padding(
             padding: EdgeInsets.symmetric(horizontal: 8.0),
             child: DoseHistoryItem(
-                title: DateTime.fromMillisecondsSinceEpoch(dose.addedAt)
-                    .toString(),
+                title: displayDateAndTime(dose.addedAt),
                 type: dose.type == HistoryDoseType.taken
                     ? DoseHistoryType.added
                     : DoseHistoryType.side_effect)),

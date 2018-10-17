@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lek_bierz/main.dart';
+import 'package:lek_bierz/ui/common/time.dart';
 
 class AddDoseDialog extends StatefulWidget {
   final DateTime initialDateTime;
@@ -97,7 +98,7 @@ class _AddDoseDialogState extends State<AddDoseDialog> {
               children: [
                 Text('Data'),
                 Text(
-                  date.toString(),
+                  displayTime(date.millisecondsSinceEpoch),
                   style: TextStyle(fontSize: 14.0, color: MyApp.grayColor),
                 )
               ],
