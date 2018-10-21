@@ -159,7 +159,7 @@ class ScanScreenState extends State<ScanScreen> {
 
     _hideWaitSpinner();
 
-    if (response == null) {
+    if (response == null || response.product == null) {
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text('Zeskanowany produkt nie jest produktem leczniczym.'),
         duration: Duration(seconds: 2),

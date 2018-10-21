@@ -24,7 +24,9 @@ abstract class MedicinalProductData
       _$MedicinalProductData;
 }
 
-abstract class MedicinalProductDataProduct implements Built<MedicinalProductDataProduct, MedicinalProductDataProductBuilder> {
+abstract class MedicinalProductDataProduct
+    implements
+        Built<MedicinalProductDataProduct, MedicinalProductDataProductBuilder> {
   @nullable
   MedicinalProduct get product;
 
@@ -33,8 +35,9 @@ abstract class MedicinalProductDataProduct implements Built<MedicinalProductData
   static Serializer<MedicinalProductDataProduct> get serializer =>
       _$medicinalProductDataProductSerializer;
 
-  factory MedicinalProductDataProduct([updates(MedicinalProductDataProductBuilder b)]) =
-  _$MedicinalProductDataProduct;
+  factory MedicinalProductDataProduct(
+          [updates(MedicinalProductDataProductBuilder b)]) =
+      _$MedicinalProductDataProduct;
 }
 
 abstract class MedicinalProduct
