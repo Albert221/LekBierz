@@ -65,19 +65,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     .toList().reversed.toList());
           },
         ),
-//        Padding(
-//            padding: EdgeInsets.symmetric(horizontal: 16.0),
-//            child: ListHeader('Wzięte na dziś (zmockowane)')),
-//        MedicineItem(
-//          color: MyApp.grayColor,
-//          title: 'Izotek 10mg',
-//          icon: Icons.map,
-//        ),
-//        MedicineItem(
-//          color: MyApp.grayColor,
-//          title: 'Herbapect',
-//          icon: Icons.vertical_align_bottom,
-//        ),
         Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: _buildArchiveButton(context)),

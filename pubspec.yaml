@@ -32,6 +32,8 @@ dependencies:
   firebase_ml_vision: ^0.1.2
   intl: ^0.15.7
   uuid: ^1.0.3
+  path_provider: ^0.4.1
+  redux_persist_flutter: ^0.6.0
 
 dev_dependencies:
   flutter_test:

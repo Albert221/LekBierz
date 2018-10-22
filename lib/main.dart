@@ -2,9 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
-import 'package:lek_bierz/api/firebase_persistor.dart';
 import 'package:lek_bierz/models/serializers.dart';
+import 'package:lek_bierz/api/flutter_storage.dart';
 import 'package:lek_bierz/redux/state.dart';
 import 'package:lek_bierz/redux/reducers.dart';
 import 'package:lek_bierz/ui/home/screen.dart';
@@ -15,7 +14,7 @@ import 'package:redux_persist_encoder/redux_persist_encoder.dart';
 
 void main() {
   final persistor = Persistor<LekBierzState>(
-      storage: FirebasePersistor(),
+      storage: FlutterStorage('lek-bierz'),
       decoder: (data) =>
           serializers.deserializeWith(LekBierzState.serializer, data),
       encoder: (data) => json
@@ -26,7 +25,6 @@ void main() {
       middleware: [persistor.createMiddleware(), LoggingMiddleware.printer()]);
 
   persistor.load(store);
-
   runApp(MyApp(store: store));
 }
 
