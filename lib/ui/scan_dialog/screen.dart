@@ -7,6 +7,7 @@ import 'package:camera/camera.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:lek_bierz/api/medicinal_products_repository.dart';
 import 'package:lek_bierz/models/medicinal_product.dart' as products;
+import 'package:path_provider/path_provider.dart';
 
 class ScanScreen extends StatefulWidget {
   @override
@@ -16,7 +17,6 @@ class ScanScreen extends StatefulWidget {
 class ScanScreenState extends State<ScanScreen> {
   CameraController controller;
   CameraDescription backCamera;
-  Directory directory;
 
   bool waiting = false;
 
@@ -27,8 +27,6 @@ class ScanScreenState extends State<ScanScreen> {
   }
 
   void _initCameraController() async {
-    directory = await Directory.systemTemp.createTemp();
-
     backCamera = (await availableCameras()).firstWhere(
         (camera) => camera.lensDirection == CameraLensDirection.back);
 
@@ -127,6 +125,8 @@ class ScanScreenState extends State<ScanScreen> {
     }
 
     _showWaitSpinner();
+
+    final directory = await getTemporaryDirectory();
 
     final String photoPath = '${directory.path}/barcode-${_timestamp()}.jpg';
 
