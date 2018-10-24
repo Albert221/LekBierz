@@ -7,7 +7,7 @@ description: Medicine tracking that saves your time. And health.
 # Both the version and the builder number may be overridden in flutter
 # build by specifying --build-name and --build-number, respectively.
 # Read more about versioning at semver.org.
-version: 1.0.0+1
+version: 1.0.2+3
 
 environment:
   sdk: ">=2.0.0-dev.68.0 <3.0.0"
@@ -24,12 +24,10 @@ dependencies:
   built_value: ^6.1.4
   built_collection: ^4.0.0
 
-  cloud_firestore: ^0.8.1+1
-
   scoped_model: ^0.3.0
   http: ^0.11.3
   camera: ^0.2.4
-  firebase_ml_vision: ^0.1.2
+  firebase_ml_vision: ^0.2.0+1
   intl: ^0.15.7
   uuid: ^1.0.3
   path_provider: ^0.4.1
