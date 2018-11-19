@@ -44,13 +44,11 @@ class _MedicineScreenState extends State<MedicineScreen> {
                     ]
                   : [
                       IconButton(
-                        icon: Icon(Icons.edit),
-                        onPressed: () => this._editPressed(),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.archive),
-                        onPressed: () => vm.archiveMedicine(),
-                      )
+                          icon: Icon(Icons.edit),
+                          onPressed: () => this._editPressed()),
+//                      IconButton(
+//                          icon: Icon(Icons.archive),
+//                          onPressed: () => vm.archiveMedicine())
                     ],
             ),
             body: Builder(builder: (BuildContext context) {

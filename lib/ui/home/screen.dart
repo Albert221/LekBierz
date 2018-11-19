@@ -27,10 +27,9 @@ class _HomeScreenState extends State<HomeScreen> {
           context: context,
           title: Text('LekBierz'),
           actions: [
-            IconButton(
-              icon: Icon(Icons.archive),
-              onPressed: () => this._archiveButtonPressed(),
-            )
+//            IconButton(
+//                icon: Icon(Icons.archive),
+//                onPressed: () => this._archiveButtonPressed())
           ],
         ),
         body: Builder(builder: (BuildContext context) {
@@ -46,9 +45,6 @@ class _HomeScreenState extends State<HomeScreen> {
         Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
             child: _buildAddMedicineButton(context)),
-        Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: ListHeader('Po południu')),
         StoreConnector<LekBierzState, Iterable<Medicine>>(
           converter: (store) =>
               store.state.medicines.where((med) => !med.archived),
@@ -62,12 +58,14 @@ class _HomeScreenState extends State<HomeScreen> {
                               medicine.productData.form),
                           onTap: () => this._medicineItemTapped(medicine),
                         ))
-                    .toList().reversed.toList());
+                    .toList()
+                    .reversed
+                    .toList());
           },
         ),
-        Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: _buildArchiveButton(context)),
+//        Padding(
+//            padding: EdgeInsets.symmetric(horizontal: 16.0),
+//            child: _buildArchiveButton(context)),
       ],
     );
   }
