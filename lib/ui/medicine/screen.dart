@@ -77,7 +77,7 @@ class _MedicineScreenState extends State<MedicineScreen> {
           ? SizedBox()
           : Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: DosingSection(vm.medicine.dosing.frequency,
+              child: DosingSection(vm.medicine.dosing,
                   onAddDosingTap: this._addDosingPressed)),
       _buildDoseHistory(context, vm)
     ];

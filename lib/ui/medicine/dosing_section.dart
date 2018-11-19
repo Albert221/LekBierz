@@ -3,10 +3,10 @@ import 'package:lek_bierz/redux/state.dart';
 import 'package:lek_bierz/ui/common/list_header.dart';
 
 class DosingSection extends StatelessWidget {
-  final DosingFrequency dosingFrequency;
+  final Dosing dosing;
   final Function onAddDosingTap;
 
-  DosingSection(this.dosingFrequency, {Key key, this.onAddDosingTap})
+  DosingSection(this.dosing, {Key key, this.onAddDosingTap})
       : super(key: key);
 
   @override
@@ -16,12 +16,12 @@ class DosingSection extends StatelessWidget {
         child: Column(
           children: [
             ListHeader('Dawkowanie'),
-            dosingFrequency != null
+            dosing != null
                 ? Row(
                     children: [
                       Chip(
                           label:
-                              Text(_getFrequencyDescription(dosingFrequency))),
+                              Text(_getFrequencyDescription(dosing.frequency))),
                       SizedBox(width: 8.0),
                       Chip(label: Text('Rano')),
                       SizedBox(width: 8.0),
