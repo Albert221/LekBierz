@@ -9,6 +9,7 @@ import 'package:lek_bierz/ui/common/time.dart';
 import 'package:lek_bierz/ui/medicine/add_dose_dialog.dart';
 import 'package:lek_bierz/ui/medicine/dose_details_dialog.dart';
 import 'package:lek_bierz/ui/medicine/dose_history_item.dart';
+import 'package:lek_bierz/ui/medicine/dosing_section.dart';
 import 'package:redux/redux.dart';
 import 'package:uuid/uuid.dart';
 
@@ -76,7 +77,8 @@ class _MedicineScreenState extends State<MedicineScreen> {
           ? SizedBox()
           : Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: _buildDosing(context, vm)),
+              child: DosingSection(vm.medicine.dosing.frequency,
+                  onAddDosingTap: this._addDosingPressed)),
       _buildDoseHistory(context, vm)
     ];
   }
@@ -95,7 +97,10 @@ class _MedicineScreenState extends State<MedicineScreen> {
         child: Column(
           children: [
             Text(
-              'Jest dostępnych wiele różnych wersji Lorem Ipsum, ale większość zmieniła się pod wpływem dodanego humoru czy przypadkowych słów, które nawet w najmniejszym stopniu nie przypominają istniejących.',
+              'Jest dostępnych wiele różnych wersji Lorem Ipsum, ale większość '
+                  'zmieniła się pod wpływem dodanego humoru czy przypadkowych '
+                  'słów, które nawet w najmniejszym stopniu nie przypominają '
+                  'istniejących.',
               style: TextStyle(fontSize: 16.0, height: 1.4),
             ),
             SizedBox(
@@ -111,59 +116,6 @@ class _MedicineScreenState extends State<MedicineScreen> {
             )
           ],
         ));
-  }
-
-  Widget _buildDosing(BuildContext context, _ViewModel vm) {
-    return Padding(
-        padding: EdgeInsets.only(bottom: 16.0),
-        child: Column(
-          children: [
-            ListHeader('Dawkowanie'),
-            vm.medicine.dosing != null
-                ? Row(
-                    children: [
-                      Chip(
-                          label: Text(_getFrequencyTitle(
-                              vm.medicine.dosing.frequency))),
-                      SizedBox(width: 8.0),
-                      Chip(label: Text('Rano')),
-                      SizedBox(width: 8.0),
-                      Chip(label: Text('Po południu')),
-                      SizedBox(width: 8.0),
-                      Chip(label: Text('Wieczorem')),
-                    ],
-                  )
-                : FlatButton(
-                    child: Row(mainAxisSize: MainAxisSize.min, children: [
-                      Icon(Icons.add_alert, color: Colors.white, size: 20.0),
-                      SizedBox(width: 8.0),
-                      Text('USTAW DAWKOWANIE',
-                          style: TextStyle(color: Colors.white))
-                    ]),
-                    color: Theme.of(context).primaryColor,
-                    onPressed: () => this._addDosingPressed(),
-                  ),
-          ],
-        ));
-  }
-
-  String _getFrequencyTitle(DosingFrequency frequency) {
-    switch (frequency) {
-      case DosingFrequency.daily:
-        return 'Codziennie';
-      case DosingFrequency.everyTwoDays:
-        return 'Co dwa dni';
-      case DosingFrequency.everyThreeDays:
-        return 'Co trzy dni';
-      case DosingFrequency.everyFourDays:
-        return 'Co cztery dni';
-      case DosingFrequency.everyFiveDays:
-        return 'Co pięć dni';
-      case DosingFrequency.everyWeek:
-        return 'Co tydzień';
-    }
-
-    return '';
   }
 
   String _getTimeTitle(DoseTime time) {
