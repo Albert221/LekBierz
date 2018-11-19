@@ -14,3 +14,6 @@ String displayDate(int millisecondsSinceEpoch) {
   final time = DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpoch);
   return DateFormat.MMMMd().format(time);
 }
+
+DateTime dateFromDateTime(DateTime dateTime) =>
+    DateTime(dateTime.year, dateTime.month, dateTime.day);

@@ -159,7 +159,7 @@ class _MedicineScreenState extends State<MedicineScreen> {
                   builder: (BuildContext context) {
                     return AddDoseDialog(
                       initialDateTime:
-                          DateTime.fromMicrosecondsSinceEpoch(dose.addedAt),
+                          DateTime.fromMillisecondsSinceEpoch(dose.addedAt),
                       initialSideEffects: dose.sideEffects,
                     );
                   }).then((result) {

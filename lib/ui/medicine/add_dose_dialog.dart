@@ -32,7 +32,7 @@ class _AddDoseDialogState extends State<AddDoseDialog> {
     date = widget.initialDateTime != null
         ? DateTime(widget.initialDateTime.year, widget.initialDateTime.month,
             widget.initialDateTime.day)
-        : DateTime.now();
+        : dateFromDateTime(DateTime.now());
     sideEffectsController = TextEditingController()
       ..text = widget.initialSideEffects;
   }
@@ -98,7 +98,7 @@ class _AddDoseDialogState extends State<AddDoseDialog> {
               children: [
                 Text('Data'),
                 Text(
-                  displayTime(date.millisecondsSinceEpoch),
+                  displayDate(date.millisecondsSinceEpoch),
                   style: TextStyle(fontSize: 14.0, color: MyApp.grayColor),
                 )
               ],
@@ -126,7 +126,9 @@ class _AddDoseDialogState extends State<AddDoseDialog> {
               children: [
                 Text('Czas'),
                 Text(
-                  time.format(context),
+                  displayTime(DateTime(0)
+                      .add(Duration(hours: time.hour, minutes: time.minute))
+                      .millisecondsSinceEpoch),
                   style: TextStyle(fontSize: 14.0, color: MyApp.grayColor),
                 )
               ],

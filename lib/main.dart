@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:lek_bierz/models/serializers.dart';
 import 'package:lek_bierz/api/flutter_storage.dart';
 import 'package:lek_bierz/redux/state.dart';
@@ -13,6 +15,9 @@ import 'package:redux_logging/redux_logging.dart';
 import 'package:redux_persist_encoder/redux_persist_encoder.dart';
 
 void main() {
+  Intl.defaultLocale = 'pl';
+  initializeDateFormatting('pl');
+
   final persistor = Persistor<LekBierzState>(
       storage: FlutterStorage('lek-bierz'),
       decoder: (data) =>
