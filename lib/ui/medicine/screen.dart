@@ -155,6 +155,24 @@ class _MedicineScreenState extends State<MedicineScreen> {
                 ? DoseHistoryType.added
                 : DoseHistoryType.side_effect,
             onTap: () => this._dosePressed(context, vm, dose),
+            onEditTap: () {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AddDoseDialog(
+                      initialDateTime:
+                          DateTime.fromMicrosecondsSinceEpoch(dose.addedAt),
+                      initialSideEffects: dose.sideEffects,
+                    );
+                  }).then((result) {
+                if (result == null) return;
+
+                vm.updateDose(dose.rebuild((b) => b
+                  ..addedAt = result.dateTime.millisecondsSinceEpoch
+                  ..sideEffects = result.sideEffects));
+              });
+            },
+            onDeleteTap: () => vm.removeDose(dose),
           );
         })
         .toList()
@@ -221,32 +239,7 @@ class _MedicineScreenState extends State<MedicineScreen> {
   void _dosePressed(BuildContext context, _ViewModel vm, HistoryDose dose) {
     showDialog(
         context: context,
-        builder: (BuildContext context) {
-          return DoseDetailsDialog(
-            dose: dose,
-            onEditTapped: (BuildContext context) async {
-              AddDoseDialogResult result = await showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AddDoseDialog(
-                      initialDateTime:
-                          DateTime.fromMicrosecondsSinceEpoch(dose.addedAt),
-                      initialSideEffects: dose.sideEffects,
-                    );
-                  });
-
-              if (result != null) {
-                vm.updateDose(dose.rebuild((b) => b
-                  ..addedAt = result.dateTime.millisecondsSinceEpoch
-                  ..sideEffects = result.sideEffects));
-
-                Navigator.of(context).pop();
-              }
-            },
-            readonly: vm.medicine.archived,
-            onDeleteTapped: () => vm.removeDose(dose),
-          );
-        });
+        builder: (BuildContext context) => DoseDetailsDialog(dose: dose));
   }
 }
 

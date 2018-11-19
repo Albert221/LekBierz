@@ -6,45 +6,14 @@ import 'package:lek_bierz/ui/medicine/dose_history_item.dart';
 
 class DoseDetailsDialog extends StatelessWidget {
   final HistoryDose dose;
-  final Function(BuildContext) onEditTapped;
-  final Function onDeleteTapped;
-  final bool readonly;
 
-  const DoseDetailsDialog(
-      {Key key,
-      @required this.dose,
-      this.onEditTapped,
-      this.onDeleteTapped,
-      this.readonly = false})
-      : super(key: key);
+  const DoseDetailsDialog({Key key, @required this.dose}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    Widget title;
-    if (readonly) {
-      title = Text('Dawka');
-    } else {
-      title = Row(
-        children: [
-          Expanded(
-            child: Text('Dawka'),
-          ),
-          IconButton(
-              icon: Icon(Icons.edit, color: MyApp.grayColor),
-              onPressed: () => this._onEditTap(context)),
-          IconButton(
-              icon: Icon(
-                Icons.delete,
-                color: MyApp.grayColor,
-              ),
-              onPressed: () => this._onDeleteTap(context))
-        ],
-      );
-    }
-
     return SimpleDialog(
       titlePadding: EdgeInsets.only(left: 24.0, top: 12.0, right: 16.0),
-      title: title,
+      title: Text('Dawka'),
       children: [
         Padding(
             padding: EdgeInsets.symmetric(horizontal: 8.0),
@@ -63,14 +32,5 @@ class DoseDetailsDialog extends StatelessWidget {
             : SizedBox()
       ],
     );
-  }
-
-  void _onEditTap(BuildContext context) async {
-    await onEditTapped(context);
-  }
-
-  void _onDeleteTap(BuildContext context) {
-    Navigator.of(context).pop();
-    onDeleteTapped();
   }
 }

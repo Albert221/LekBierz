@@ -7,9 +7,16 @@ class DoseHistoryItem extends StatelessWidget {
   final String title;
   final DoseHistoryType type;
   final Function onTap;
+  final Function onEditTap;
+  final Function onDeleteTap;
 
   const DoseHistoryItem(
-      {Key key, @required this.title, @required this.type, this.onTap})
+      {Key key,
+      @required this.title,
+      @required this.type,
+      this.onTap,
+      this.onEditTap,
+      this.onDeleteTap})
       : super(key: key);
 
   @override
@@ -32,6 +39,7 @@ class DoseHistoryItem extends StatelessWidget {
 
     return InkWell(
       child: Container(
+        height: 64.0,
         padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
         child: Row(
           children: [
@@ -44,7 +52,8 @@ class DoseHistoryItem extends StatelessWidget {
               child: Icon(icon, size: 18.0, color: color),
             ),
             SizedBox(width: 16.0),
-            Text(
+            Expanded(
+                child: Text(
               title,
               style: TextStyle(
                   fontSize: 16.0,
@@ -53,11 +62,38 @@ class DoseHistoryItem extends StatelessWidget {
                       : FontStyle.normal,
                   color:
                       type == DoseHistoryType.skipped ? MyApp.grayColor : null),
-            )
+            )),
+            _buildActionsMenu()
           ],
         ),
       ),
       onTap: onTap != null ? () => onTap() : null,
+    );
+  }
+
+  Widget _buildActionsMenu() {
+    if (onEditTap == null && onDeleteTap == null) {
+      return SizedBox();
+    }
+
+    List<PopupMenuItem> menuItems = [];
+    if (onEditTap != null) {
+      menuItems.add(PopupMenuItem(value: 'edit', child: Text('Edytuj')));
+    }
+
+    if (onDeleteTap != null) {
+      menuItems.add(PopupMenuItem(value: 'delete', child: Text('Usuń')));
+    }
+
+    return PopupMenuButton(
+      itemBuilder: (BuildContext context) => menuItems,
+      onSelected: (action) {
+        if (action == 'edit' && onEditTap != null) {
+          onEditTap();
+        } else if (action == 'delete' && onDeleteTap != null) {
+          onDeleteTap();
+        }
+      },
     );
   }
 }
