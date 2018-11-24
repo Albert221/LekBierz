@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lek_bierz/main.dart';
 import 'package:lek_bierz/redux/state.dart';
+import 'package:lek_bierz/ui/medicine_icons_icons.dart';
 
 class MedicineItem extends StatelessWidget {
   final Color color;
@@ -58,13 +59,13 @@ class MedicineItem extends StatelessWidget {
   static IconData mapMedicineFormToIcon(MedicineForm form) {
     switch (form) {
       case MedicineForm.pill:
-        return Icons.toll;
+        return MedicineIcons.pill;
       case MedicineForm.tablet:
-        return Icons.add_circle;
+        return MedicineIcons.tablet;
       case MedicineForm.syrup:
-        return Icons.pin_drop;
+        return MedicineIcons.syrup;
       default:
-        return Icons.warning;
+        return Icons.help;
     }
   }
 }

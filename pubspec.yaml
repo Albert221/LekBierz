@@ -55,6 +55,11 @@ flutter:
   assets:
     - assets/barcode_placeholder.png
 
+  fonts:
+   - family:  MedicineIcons
+     fonts:
+      - asset: assets/fonts/MedicineIcons.ttf
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.
 
