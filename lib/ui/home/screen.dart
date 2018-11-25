@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:lek_bierz/models/medicinal_product.dart' as products;
 import 'package:lek_bierz/main.dart';
-import 'package:lek_bierz/redux/actions.dart';
 import 'package:lek_bierz/redux/state.dart';
 import 'package:lek_bierz/ui/archive/screen.dart';
 import 'package:lek_bierz/ui/common/app_bar.dart';
-import 'package:lek_bierz/ui/common/list_header.dart';
 import 'package:lek_bierz/ui/common/medicine_item.dart';
+import 'package:lek_bierz/ui/home/ean_scanner.dart';
 import 'package:lek_bierz/ui/medicine/screen.dart';
-import 'package:lek_bierz/ui/scan_dialog/screen.dart';
 import 'package:redux/redux.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -18,7 +15,18 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  BuildContext screenContext;
+  EanScanner _eanScanner;
+  BuildContext _screenContext;
+
+  bool _doingWork = false;
+
+  _HomeScreenState() {
+    _eanScanner = EanScanner(onWorkStarted: () {
+      setState(() => _doingWork = true);
+    }, onWorkEnded: () {
+      setState(() => _doingWork = false);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,41 +41,44 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         body: Builder(builder: (BuildContext context) {
-          screenContext = context;
+          _screenContext = context;
 
           return _buildBody(context);
         }));
   }
 
   Widget _buildBody(BuildContext context) {
-    return ListView(
-      children: [
-        Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: _buildAddMedicineButton(context)),
-        StoreConnector<LekBierzState, Iterable<Medicine>>(
-          converter: (store) =>
-              store.state.medicines.where((med) => !med.archived),
-          builder: (context, medicines) {
-            return Column(
-                children: medicines
-                    .map((medicine) => MedicineItem(
-                          color: Theme.of(context).primaryColor,
-                          title: medicine.productData.name,
-                          icon: MedicineItem.mapMedicineFormToIcon(
-                              medicine.productData.form),
-                          onTap: () => this._medicineItemTapped(medicine),
-                        ))
-                    .toList()
-                    .reversed
-                    .toList());
-          },
-        ),
+    return Stack(alignment: Alignment.center, children: [
+      ListView(
+        children: [
+          Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              child: _buildAddMedicineButton(context)),
+          StoreConnector<LekBierzState, Iterable<Medicine>>(
+            converter: (store) =>
+                store.state.medicines.where((med) => !med.archived),
+            builder: (context, medicines) {
+              return Column(
+                  children: medicines
+                      .map((medicine) => MedicineItem(
+                            color: Theme.of(context).primaryColor,
+                            title: medicine.productData.name,
+                            icon: MedicineItem.mapMedicineFormToIcon(
+                                medicine.productData.form),
+                            onTap: () => this._medicineItemTapped(medicine),
+                          ))
+                      .toList()
+                      .reversed
+                      .toList());
+            },
+          ),
 //        Padding(
 //            padding: EdgeInsets.symmetric(horizontal: 16.0),
 //            child: _buildArchiveButton(context)),
-      ],
-    );
+        ],
+      ),
+      _doingWork ? CircularProgressIndicator() : SizedBox()
+    ]);
   }
 
   Widget _buildAddMedicineButton(BuildContext context) {
@@ -126,22 +137,22 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _archiveButtonPressed() {
-    Navigator.of(screenContext).push(
+    Navigator.of(_screenContext).push(
         MaterialPageRoute(builder: (BuildContext context) => ArchiveScreen()));
   }
 
   void _addMedicineButtonPressed(Store<LekBierzState> store) async {
-    final products.MedicinalProductResponse response =
-        await Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => ScanScreen(), fullscreenDialog: true));
+    final result = await _eanScanner.doStuff(store);
 
-    if (response == null) return;
-
-    store.dispatch(AddMedicineAction(Medicine.fromMedicinalProduct(response)));
+    if (!result) {
+      Scaffold.of(_screenContext).showSnackBar(SnackBar(
+          content: Text(
+              'Nie udało się znaleźć zeskanowanego leku. Spróbuj jeszcze raz.')));
+    }
   }
 
   void _medicineItemTapped(Medicine medicine) {
-    Navigator.of(screenContext).push(MaterialPageRoute(
+    Navigator.of(_screenContext).push(MaterialPageRoute(
         builder: (BuildContext context) =>
             MedicineScreen(medicineId: medicine.id)));
   }

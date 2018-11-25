@@ -26,8 +26,7 @@ dependencies:
 
   scoped_model: ^0.3.0
   http: ^0.11.3
-  camera: ^0.2.4
-  firebase_ml_vision: ^0.2.0+1
+  barcode_scan: ^0.0.8
   intl: ^0.15.7
   uuid: ^1.0.3
   path_provider: ^0.4.1
