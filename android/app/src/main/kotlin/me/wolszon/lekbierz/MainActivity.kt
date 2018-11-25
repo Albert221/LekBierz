@@ -7,6 +7,7 @@ import io.flutter.plugins.GeneratedPluginRegistrant
 
 class MainActivity : FlutterActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        io.flutter.view.FlutterMain.startInitialization(this)
         super.onCreate(savedInstanceState)
         GeneratedPluginRegistrant.registerWith(this)
     }
