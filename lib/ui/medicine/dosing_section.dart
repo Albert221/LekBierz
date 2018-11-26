@@ -11,15 +11,6 @@ class DosingSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var children = <Widget>[];
-    children
-      ..add(Padding(
-          padding: EdgeInsets.only(left: 16.0, right: 8.0),
-          child: Chip(
-              label: Text(_getFrequencyDescription(dosing.frequency)),
-              backgroundColor: MyApp.lightGrayColor)))
-      ..addAll(_buildDoseTimes(dosing.times.toList()));
-
     return Padding(
         padding: EdgeInsets.only(bottom: 16.0),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
@@ -30,7 +21,8 @@ class DosingSection extends StatelessWidget {
               ? SizedBox(
                   height: 48.0,
                   child: ListView(
-                      scrollDirection: Axis.horizontal, children: children))
+                      scrollDirection: Axis.horizontal,
+                      children: _buildChipsRow(dosing)))
               : FlatButton(
                   child: Row(mainAxisSize: MainAxisSize.min, children: [
                     Icon(Icons.add_alert, color: Colors.white, size: 20.0),
@@ -41,6 +33,16 @@ class DosingSection extends StatelessWidget {
                   color: Theme.of(context).primaryColor,
                   onPressed: () => onAddDosingTap())
         ]));
+  }
+
+  List<Widget> _buildChipsRow(Dosing dosing) {
+    return []
+      ..add(Padding(
+          padding: EdgeInsets.only(left: 16.0, right: 8.0),
+          child: Chip(
+              label: Text(_getFrequencyDescription(dosing.frequency)),
+              backgroundColor: MyApp.lightGrayColor)))
+      ..addAll(_buildDoseTimes(dosing.times.toList()));
   }
 
   List<Widget> _buildDoseTimes(List<DoseTime> doseTimes) {
