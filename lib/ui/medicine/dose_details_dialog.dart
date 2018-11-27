@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lek_bierz/main.dart';
 import 'package:lek_bierz/redux/state.dart';
+import 'package:lek_bierz/ui/common/list_header.dart';
 import 'package:lek_bierz/ui/common/time.dart';
 import 'package:lek_bierz/ui/medicine/dose_history_item.dart';
 
@@ -11,26 +11,23 @@ class DoseDetailsDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final children = <Widget>[];
+    children.add(DoseHistoryItem(
+        title: displayDateAndTime(dose.addedAt),
+        type: dose.type == HistoryDoseType.taken
+            ? DoseHistoryType.added
+            : DoseHistoryType.side_effect));
+
+    if (dose.sideEffects != null && dose.sideEffects.isNotEmpty) {
+      children.add(Padding(
+          padding: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
+          child: Column(children: [
+            ListHeader('Skutki uboczne'),
+            Text(dose.sideEffects)
+          ])));
+    }
+
     return SimpleDialog(
-      titlePadding: EdgeInsets.only(left: 24.0, top: 12.0, right: 16.0),
-      title: Text('Dawka'),
-      children: [
-        Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.0),
-            child: DoseHistoryItem(
-                title: displayDateAndTime(dose.addedAt),
-                type: dose.type == HistoryDoseType.taken
-                    ? DoseHistoryType.added
-                    : DoseHistoryType.side_effect)),
-        dose.sideEffects != null && dose.sideEffects != ''
-            ? Container(
-                padding: EdgeInsets.only(top: 8.0, right: 24.0, left: 24.0),
-                child: Text(
-                  dose.sideEffects,
-                  style: TextStyle(color: MyApp.grayColor),
-                ))
-            : SizedBox()
-      ],
-    );
+        contentPadding: EdgeInsets.symmetric(vertical: 8.0), children: children);
   }
 }
