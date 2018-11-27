@@ -47,7 +47,7 @@ class _AddDoseDialogState extends State<AddDoseDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(widget._initialsPresent() ? 'Edytuj dawkę' : 'Dodaj dawkę'),
-      contentPadding: EdgeInsets.only(top: 24.0),
+      contentPadding: EdgeInsets.only(top: 8.0),
       content: SingleChildScrollView(
           child: ListBody(children: [
         _buildDatePicker(context),
@@ -81,61 +81,21 @@ class _AddDoseDialogState extends State<AddDoseDialog> {
   }
 
   Widget _buildDatePicker(BuildContext context) {
-    return InkWell(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(Icons.calendar_today),
-            SizedBox(
-              width: 32.0,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Data'),
-                Text(
-                  displayDate(date.millisecondsSinceEpoch),
-                  style: TextStyle(fontSize: 14.0, color: MyApp.grayColor),
-                )
-              ],
-            )
-          ],
-        ),
-      ),
-      onTap: () => this._handleGettingDate(context),
-    );
+    return ListTile(
+        leading: Icon(Icons.calendar_today),
+        title: Text('Data'),
+        subtitle: Text(displayDate(date.millisecondsSinceEpoch)),
+        onTap: () => this._handleGettingDate(context));
   }
 
   Widget _buildTimePicker(BuildContext context) {
-    return InkWell(
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(Icons.access_time),
-            SizedBox(
-              width: 32.0,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Czas'),
-                Text(
-                  displayTime(DateTime(0)
-                      .add(Duration(hours: time.hour, minutes: time.minute))
-                      .millisecondsSinceEpoch),
-                  style: TextStyle(fontSize: 14.0, color: MyApp.grayColor),
-                )
-              ],
-            )
-          ],
-        ),
-      ),
-      onTap: () => this._handleGettingTime(context),
-    );
+    return ListTile(
+        leading: Icon(Icons.access_time),
+        title: Text('Czas'),
+        subtitle: Text(displayTime(DateTime(0)
+            .add(Duration(hours: time.hour, minutes: time.minute))
+            .millisecondsSinceEpoch)),
+        onTap: () => this._handleGettingTime(context));
   }
 
   void _handleGettingDate(BuildContext context) async {
