@@ -69,9 +69,7 @@ class _AddDoseDialogState extends State<AddDoseDialog> {
             'ANULUJ',
             style: TextStyle(color: Theme.of(context).primaryColor),
           ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          onPressed: () => Navigator.of(context).pop(),
         ),
         FlatButton(
           child: Text(widget._initialsPresent() ? 'ZAPISZ' : 'DODAJ',

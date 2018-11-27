@@ -32,3 +32,10 @@ class RemoveHistoryDoseAction {
 
   const RemoveHistoryDoseAction(this.medicineId, this.doseId);
 }
+
+class SetDosingAction {
+  final String medicineId;
+  final Dosing dosing;
+
+  const SetDosingAction(this.medicineId, this.dosing);
+}

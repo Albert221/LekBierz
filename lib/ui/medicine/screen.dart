@@ -7,6 +7,7 @@ import 'package:lek_bierz/ui/common/app_bar.dart';
 import 'package:lek_bierz/ui/common/list_header.dart';
 import 'package:lek_bierz/ui/common/time.dart';
 import 'package:lek_bierz/ui/medicine/add_dose_dialog.dart';
+import 'package:lek_bierz/ui/medicine/add_dosing_dialog.dart';
 import 'package:lek_bierz/ui/medicine/dose_details_dialog.dart';
 import 'package:lek_bierz/ui/medicine/dose_history_item.dart';
 import 'package:lek_bierz/ui/medicine/dosing_section.dart';
@@ -73,10 +74,8 @@ class _MedicineScreenState extends State<MedicineScreen> {
       ),
       vm.medicine.archived
           ? SizedBox()
-          : Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: DosingSection(vm.medicine.dosing,
-                  onAddDosingTap: this._addDosingPressed)),
+          : DosingSection(vm.medicine.dosing,
+              onSetDosingTap: () => this._setDosingPressed(context, vm)),
       _buildDoseHistory(context, vm)
     ];
   }
@@ -114,29 +113,6 @@ class _MedicineScreenState extends State<MedicineScreen> {
             )
           ],
         ));
-  }
-
-  String _getTimeTitle(DoseTime time) {
-    switch (time) {
-      case DoseTime.morning:
-        return 'Rano';
-      case DoseTime.afterBreakfast:
-        return 'Po śniadaniu';
-      case DoseTime.beforeNoon:
-        return 'Przed południem';
-      case DoseTime.noon:
-        return 'Południe';
-      case DoseTime.afterLunch:
-        return 'Po obiedzie';
-      case DoseTime.beforeDinner:
-        return 'Przed kolacją';
-      case DoseTime.afterDinner:
-        return 'Po kolacji';
-      case DoseTime.beforeSleep:
-        return 'Przed snem';
-    }
-
-    return '';
   }
 
   Widget _buildDoseHistory(BuildContext context, _ViewModel vm) {
@@ -212,16 +188,20 @@ class _MedicineScreenState extends State<MedicineScreen> {
     // todo
   }
 
-  void _addDosingPressed() {
-    // todo
+  void _setDosingPressed(BuildContext context, _ViewModel vm) async {
+    AddDosingDialogResult result = await showDialog(
+        context: context,
+        builder: (BuildContext context) =>
+            AddDosingDialog(initialDosing: vm.medicine.dosing));
+
+    if (result != null) {
+      vm.setDosing(result.dosing);
+    }
   }
 
   void _addDosePressed(BuildContext context, _ViewModel vm) async {
     AddDoseDialogResult result = await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AddDoseDialog();
-        });
+        context: context, builder: (BuildContext context) => AddDoseDialog());
 
     if (result != null) {
       HistoryDose dose = HistoryDose((b) => b
@@ -247,29 +227,29 @@ class _ViewModel {
   final Function(HistoryDose) addDose;
   final Function(HistoryDose) updateDose;
   final Function(HistoryDose) removeDose;
+  final Function(Dosing) setDosing;
 
   const _ViewModel(
       {this.medicine,
       this.archiveMedicine,
       this.addDose,
       this.updateDose,
-      this.removeDose});
+      this.removeDose,
+      this.setDosing});
 
   factory _ViewModel.from(Store<LekBierzState> store, String id) {
     final medicine = store.state.medicines.firstWhere((med) => med.id == id);
     return _ViewModel(
         medicine: medicine,
-        archiveMedicine: () {
-          store.dispatch(ArchiveMedicineAction(medicine.id));
-        },
-        addDose: (HistoryDose dose) {
-          store.dispatch(AddHistoryDoseAction(id, dose));
-        },
-        updateDose: (HistoryDose dose) {
-          store.dispatch(UpdateHistoryDoseAction(id, dose));
-        },
-        removeDose: (HistoryDose dose) {
-          store.dispatch(RemoveHistoryDoseAction(id, dose.id));
-        });
+        archiveMedicine: () =>
+            store.dispatch(ArchiveMedicineAction(medicine.id)),
+        addDose: (HistoryDose dose) =>
+            store.dispatch(AddHistoryDoseAction(id, dose)),
+        updateDose: (HistoryDose dose) =>
+            store.dispatch(UpdateHistoryDoseAction(id, dose)),
+        removeDose: (HistoryDose dose) =>
+            store.dispatch(RemoveHistoryDoseAction(id, dose.id)),
+        setDosing: (Dosing dosing) =>
+            store.dispatch(SetDosingAction(id, dosing)));
   }
 }

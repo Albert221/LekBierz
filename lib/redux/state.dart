@@ -125,6 +125,29 @@ class DoseTime extends EnumClass {
   static BuiltSet<DoseTime> get values => _$dtValues;
 
   static DoseTime valueOf(String name) => _$dtValueOf(name);
+
+  String get description {
+    switch (this) {
+      case DoseTime.morning:
+        return 'Rano';
+      case DoseTime.afterBreakfast:
+        return 'Po śniadaniu';
+      case DoseTime.beforeNoon:
+        return 'Przed południem';
+      case DoseTime.noon:
+        return 'W południe';
+      case DoseTime.afterLunch:
+        return 'Po obiedzie';
+      case DoseTime.beforeDinner:
+        return 'Przed kolacją';
+      case DoseTime.afterDinner:
+        return 'Po kolacji';
+      case DoseTime.beforeSleep:
+        return 'Przed snem';
+    }
+
+    return '';
+  }
 }
 
 class HistoryDoseStatus extends EnumClass {
@@ -189,6 +212,27 @@ class DosingFrequency extends EnumClass {
   static BuiltSet<DosingFrequency> get values => _$dfValues;
 
   static DosingFrequency valueOf(String name) => _$dfValueOf(name);
+
+  String get description {
+    switch (this) {
+      case DosingFrequency.daily:
+        return 'Codziennie';
+      case DosingFrequency.everyTwoDays:
+        return 'Co dwa dni';
+      case DosingFrequency.everyThreeDays:
+        return 'Co trzy dni';
+      case DosingFrequency.everyFourDays:
+        return 'Co cztery dni';
+      case DosingFrequency.everyFiveDays:
+        return 'Co pięć dni';
+      case DosingFrequency.everySixDays:
+        return 'Co sześć dni';
+      case DosingFrequency.everyWeek:
+        return 'Co tydzień';
+    }
+
+    return '';
+  }
 }
 
 abstract class Dosing implements Built<Dosing, DosingBuilder> {

@@ -5,9 +5,9 @@ import 'package:lek_bierz/ui/common/list_header.dart';
 
 class DosingSection extends StatelessWidget {
   final Dosing dosing;
-  final Function onAddDosingTap;
+  final Function onSetDosingTap;
 
-  DosingSection(this.dosing, {Key key, this.onAddDosingTap}) : super(key: key);
+  DosingSection(this.dosing, {Key key, this.onSetDosingTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class DosingSection extends StatelessWidget {
                   height: 48.0,
                   child: ListView(
                       scrollDirection: Axis.horizontal,
-                      children: _buildChipsRow(dosing)))
+                      children: _buildChipsRow(context, dosing)))
               : FlatButton(
                   child: Row(mainAxisSize: MainAxisSize.min, children: [
                     Icon(Icons.add_alert, color: Colors.white, size: 20.0),
@@ -31,67 +31,36 @@ class DosingSection extends StatelessWidget {
                         style: TextStyle(color: Colors.white))
                   ]),
                   color: Theme.of(context).primaryColor,
-                  onPressed: () => onAddDosingTap())
+                  onPressed: onSetDosingTap)
         ]));
   }
 
-  List<Widget> _buildChipsRow(Dosing dosing) {
+  List<Widget> _buildChipsRow(BuildContext context, Dosing dosing) {
     return []
       ..add(Padding(
           padding: EdgeInsets.only(left: 16.0, right: 8.0),
           child: Chip(
-              label: Text(_getFrequencyDescription(dosing.frequency)),
-              backgroundColor: MyApp.lightGrayColor)))
-      ..addAll(_buildDoseTimes(dosing.times.toList()));
+              label: Text(dosing.frequency.description,
+                  style: TextStyle(color: Colors.white)),
+              backgroundColor: Theme.of(context).primaryColor)))
+      ..addAll(_buildDoseTimes(dosing.times.toList()))
+      ..add(Padding(
+          padding: EdgeInsets.only(right: 8.0),
+          child: ActionChip(
+            avatar: CircleAvatar(
+                child: Icon(Icons.edit, size: 16.0, color: Colors.black),
+                backgroundColor: Colors.white.withOpacity(0.1)),
+            label: Text('Zmień'),
+            backgroundColor: Colors.black12,
+            onPressed: onSetDosingTap,
+          )));
   }
 
   List<Widget> _buildDoseTimes(List<DoseTime> doseTimes) {
     return doseTimes
         .map((time) => Padding(
             padding: EdgeInsets.only(right: 8.0),
-            child: Chip(label: Text(_getTimeDescription(time)))))
+            child: Chip(label: Text(time.description))))
         .toList();
-  }
-
-  String _getFrequencyDescription(DosingFrequency frequency) {
-    switch (frequency) {
-      case DosingFrequency.daily:
-        return 'Codziennie';
-      case DosingFrequency.everyTwoDays:
-        return 'Co dwa dni';
-      case DosingFrequency.everyThreeDays:
-        return 'Co trzy dni';
-      case DosingFrequency.everyFourDays:
-        return 'Co cztery dni';
-      case DosingFrequency.everyFiveDays:
-        return 'Co pięć dni';
-      case DosingFrequency.everyWeek:
-        return 'Co tydzień';
-    }
-
-    return '';
-  }
-
-  String _getTimeDescription(DoseTime time) {
-    switch (time) {
-      case DoseTime.morning:
-        return 'Rano';
-      case DoseTime.afterBreakfast:
-        return 'Po śniadaniu';
-      case DoseTime.beforeNoon:
-        return 'Przed południem';
-      case DoseTime.noon:
-        return 'W południe';
-      case DoseTime.afterLunch:
-        return 'Po obiedzie';
-      case DoseTime.beforeDinner:
-        return 'Przed kolacją';
-      case DoseTime.afterDinner:
-        return 'Po kolacji';
-      case DoseTime.beforeSleep:
-        return 'Przed snem';
-    }
-
-    return '';
   }
 }
