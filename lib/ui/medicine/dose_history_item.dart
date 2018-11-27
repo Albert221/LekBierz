@@ -47,7 +47,7 @@ class DoseHistoryItem extends StatelessWidget {
               width: 40.0,
               height: 40.0,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  borderRadius: const BorderRadius.all(Radius.circular(20.0)),
                   color: color.withAlpha(64)),
               child: Icon(icon, size: 18.0, color: color),
             ),
@@ -73,16 +73,18 @@ class DoseHistoryItem extends StatelessWidget {
 
   Widget _buildActionsMenu() {
     if (onEditTap == null && onDeleteTap == null) {
-      return SizedBox();
+      return const SizedBox();
     }
 
     List<PopupMenuItem> menuItems = [];
     if (onEditTap != null) {
-      menuItems.add(PopupMenuItem(value: 'edit', child: Text('Edytuj')));
+      menuItems
+          .add(const PopupMenuItem(value: 'edit', child: const Text('Edytuj')));
     }
 
     if (onDeleteTap != null) {
-      menuItems.add(PopupMenuItem(value: 'delete', child: Text('Usuń')));
+      menuItems
+          .add(const PopupMenuItem(value: 'delete', child: const Text('Usuń')));
     }
 
     return PopupMenuButton(

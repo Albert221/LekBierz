@@ -34,9 +34,9 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  static const Color primaryColor = Color.fromRGBO(0xE2, 0x3A, 0x3A, 1.0);
-  static const Color lightGrayColor = Color.fromRGBO(0xAB, 0xAB, 0xAB, 1.0);
-  static const Color grayColor = Color.fromRGBO(0x70, 0x70, 0x70, 1.0);
+  static const Color primaryColor = const Color(0xFFE23A3A);
+  static const Color lightGrayColor = const Color(0xFFABABAB);
+  static const Color grayColor = const Color(0xFF707070);
 
   final Store<LekBierzState> store;
 

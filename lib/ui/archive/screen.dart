@@ -12,7 +12,7 @@ class ArchiveScreen extends StatelessWidget {
     return StoreConnector<LekBierzState, Iterable<Medicine>>(
       converter: (store) => store.state.medicines.where((med) => med.archived),
       builder: (context, medicines) => Scaffold(
-          appBar: CommonAppBar(context: context, title: Text('Archiwum')),
+          appBar: CommonAppBar(context: context, title: const Text('Archiwum')),
           body: ListView(
               children: medicines
                   .map((medicine) => MedicineItem(

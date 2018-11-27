@@ -12,11 +12,11 @@ class DosingSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.only(bottom: 16.0),
+        padding: const EdgeInsets.only(bottom: 16.0),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: ListHeader('Dawkowanie')),
+          const Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: const ListHeader('Dawkowanie')),
           dosing != null
               ? SizedBox(
                   height: 48.0,
@@ -25,10 +25,11 @@ class DosingSection extends StatelessWidget {
                       children: _buildChipsRow(context, dosing)))
               : FlatButton(
                   child: Row(mainAxisSize: MainAxisSize.min, children: [
-                    Icon(Icons.add_alert, color: Colors.white, size: 20.0),
-                    SizedBox(width: 8.0),
-                    Text('USTAW DAWKOWANIE',
-                        style: TextStyle(color: Colors.white))
+                    const Icon(Icons.add_alert,
+                        color: Colors.white, size: 20.0),
+                    const SizedBox(width: 8.0),
+                    const Text('USTAW DAWKOWANIE',
+                        style: const TextStyle(color: Colors.white))
                   ]),
                   color: Theme.of(context).primaryColor,
                   onPressed: onSetDosingTap)
@@ -38,19 +39,19 @@ class DosingSection extends StatelessWidget {
   List<Widget> _buildChipsRow(BuildContext context, Dosing dosing) {
     return []
       ..add(Padding(
-          padding: EdgeInsets.only(left: 16.0, right: 8.0),
+          padding: const EdgeInsets.only(left: 16.0, right: 8.0),
           child: Chip(
               label: Text(dosing.frequency.description,
-                  style: TextStyle(color: Colors.white)),
+                  style: const TextStyle(color: Colors.white)),
               backgroundColor: Theme.of(context).primaryColor)))
       ..addAll(_buildDoseTimes(dosing.times.toList()))
       ..add(Padding(
-          padding: EdgeInsets.only(right: 8.0),
+          padding: const EdgeInsets.only(right: 8.0),
           child: ActionChip(
             avatar: CircleAvatar(
-                child: Icon(Icons.edit, size: 16.0, color: Colors.black),
+                child: const Icon(Icons.edit, size: 16.0, color: Colors.black),
                 backgroundColor: Colors.white.withOpacity(0.1)),
-            label: Text('Zmień'),
+            label: const Text('Zmień'),
             backgroundColor: Colors.black12,
             onPressed: onSetDosingTap,
           )));
@@ -59,7 +60,7 @@ class DosingSection extends StatelessWidget {
   List<Widget> _buildDoseTimes(List<DoseTime> doseTimes) {
     return doseTimes
         .map((time) => Padding(
-            padding: EdgeInsets.only(right: 8.0),
+            padding: const EdgeInsets.only(right: 8.0),
             child: Chip(label: Text(time.description))))
         .toList();
   }

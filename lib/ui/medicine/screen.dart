@@ -33,25 +33,19 @@ class _MedicineScreenState extends State<MedicineScreen> {
       builder: (context, vm) {
         return Scaffold(
             appBar: CommonAppBar(
-              context: context,
-              title: Text(vm.medicine.productData.name),
-              actions: vm.medicine.archived
-                  ? [
-                      Container(
+                context: context,
+                title: Text(vm.medicine.productData.name),
+                actions: [
+                  vm.medicine.archived
+                      ? Container(
                           alignment: Alignment.center,
-                          padding: EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Text('ZARCHIWIZOWANE',
-                              style: TextStyle(color: MyApp.grayColor)))
-                    ]
-                  : [
-                      IconButton(
-                          icon: Icon(Icons.edit),
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: const Text('ZARCHIWIZOWANE',
+                              style: const TextStyle(color: MyApp.grayColor)))
+                      : IconButton(
+                          icon: const Icon(Icons.edit),
                           onPressed: () => this._editPressed()),
-//                      IconButton(
-//                          icon: Icon(Icons.archive),
-//                          onPressed: () => vm.archiveMedicine())
-                    ],
-            ),
+                ]),
             body: Builder(builder: (BuildContext context) {
               screenContext = context;
 
@@ -66,14 +60,13 @@ class _MedicineScreenState extends State<MedicineScreen> {
   List<Widget> _buildBody(BuildContext context, _ViewModel vm) {
     return [
       Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: _buildBarcode(context)),
       Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.0),
-        child: _buildDescription(context),
-      ),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: _buildDescription(context)),
       vm.medicine.archived
-          ? SizedBox()
+          ? const SizedBox()
           : DosingSection(vm.medicine.dosing,
               onSetDosingTap: () => this._setDosingPressed(context, vm)),
       _buildDoseHistory(context, vm)
@@ -82,10 +75,10 @@ class _MedicineScreenState extends State<MedicineScreen> {
 
   Widget _buildBarcode(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 32.0, bottom: 16.0),
-      alignment: Alignment.center,
-      child: Image(image: AssetImage('assets/barcode_placeholder.png')),
-    );
+        padding: const EdgeInsets.only(top: 32.0, bottom: 16.0),
+        alignment: Alignment.center,
+        child: const Image(
+            image: const AssetImage('assets/barcode_placeholder.png')));
   }
 
   Widget _buildDescription(BuildContext context) {
@@ -93,23 +86,19 @@ class _MedicineScreenState extends State<MedicineScreen> {
         padding: EdgeInsets.symmetric(vertical: 16.0),
         child: Column(
           children: [
-            Text(
-              'Jest dostępnych wiele różnych wersji Lorem Ipsum, ale większość '
-                  'zmieniła się pod wpływem dodanego humoru czy przypadkowych '
-                  'słów, które nawet w najmniejszym stopniu nie przypominają '
-                  'istniejących.',
-              style: TextStyle(fontSize: 16.0, height: 1.4),
-            ),
-            SizedBox(
-              height: 16.0,
-            ),
+            const Text(
+                'Jest dostępnych wiele różnych wersji Lorem Ipsum, ale większość '
+                'zmieniła się pod wpływem dodanego humoru czy przypadkowych '
+                'słów, które nawet w najmniejszym stopniu nie przypominają '
+                'istniejących.',
+                style: const TextStyle(fontSize: 16.0, height: 1.4)),
+            const SizedBox(height: 16.0),
             Align(
               alignment: Alignment.center,
               child: FlatButton(
-                child: Text('WIĘCEJ SZCZEGÓŁÓW'),
-                onPressed: () => this._moreDetailsPressed(),
-                color: Color.fromRGBO(0xEE, 0xEE, 0xEE, 1.0),
-              ),
+                  child: const Text('WIĘCEJ SZCZEGÓŁÓW'),
+                  onPressed: () => this._moreDetailsPressed(),
+                  color: const Color.fromRGBO(0xEE, 0xEE, 0xEE, 1.0)),
             )
           ],
         ));
@@ -159,16 +148,16 @@ class _MedicineScreenState extends State<MedicineScreen> {
           padding: EdgeInsets.symmetric(horizontal: 16.0),
           child: Row(
             children: [
-              Expanded(child: ListHeader('Historia dawek')),
+              const Expanded(child: const ListHeader('Historia dawek')),
               IconButton(
-                icon: Icon(Icons.filter_list),
+                icon: const Icon(Icons.filter_list),
                 onPressed: () {},
               )
             ],
           ),
         ),
         vm.medicine.archived
-            ? SizedBox()
+            ? const SizedBox()
             : DoseHistoryItem(
                 title: doses.length > 0
                     ? 'Dodaj kolejną dawkę'

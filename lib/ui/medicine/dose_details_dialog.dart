@@ -20,14 +20,15 @@ class DoseDetailsDialog extends StatelessWidget {
 
     if (dose.sideEffects != null && dose.sideEffects.isNotEmpty) {
       children.add(Padding(
-          padding: EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0, bottom: 8.0),
           child: Column(children: [
-            ListHeader('Skutki uboczne'),
+            const ListHeader('Skutki uboczne'),
             Text(dose.sideEffects)
           ])));
     }
 
     return SimpleDialog(
-        contentPadding: EdgeInsets.symmetric(vertical: 8.0), children: children);
+        contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
+        children: children);
   }
 }

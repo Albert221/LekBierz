@@ -18,35 +18,35 @@ class MedicineItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+        padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
         child: Row(
           children: [
             Container(
                 width: 40.0,
                 height: 40.0,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    borderRadius: const BorderRadius.all(Radius.circular(20.0)),
                     color: color?.withAlpha(64) ?? Colors.transparent),
                 child: Icon(
                   icon,
                   size: 18.0,
                   color: color,
                 )),
-            SizedBox(width: 16.0),
+            const SizedBox(width: 16.0),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: TextStyle(fontSize: 16.0),
+                  style: const TextStyle(fontSize: 16.0),
                 ),
                 subtitle != null
                     ? Text(
                         subtitle,
-                        style:
-                            TextStyle(fontSize: 14.0, color: MyApp.grayColor),
+                        style: const TextStyle(
+                            fontSize: 14.0, color: MyApp.grayColor),
                       )
-                    : SizedBox()
+                    : const SizedBox()
               ],
             )
           ],

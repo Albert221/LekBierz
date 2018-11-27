@@ -33,14 +33,13 @@ class _AddDosingDialogState extends State<AddDosingDialog> {
     final divider = Container(height: 1.0, color: MyApp.lightGrayColor);
 
     return AlertDialog(
-        title: Text('Ustaw dawkowanie'),
-        contentPadding: EdgeInsets.only(top: 24.0),
+        title: const Text('Ustaw dawkowanie'),
+        contentPadding: const EdgeInsets.only(top: 24.0),
         content: Column(mainAxisSize: MainAxisSize.min, children: [
           divider,
           ListTile(
-              title: Text('Częstotliwość'),
-              subtitle:
-                  Text(choosenFrequency.description),
+              title: const Text('Częstotliwość'),
+              subtitle: Text(choosenFrequency.description),
               leading: Icon(Icons.history),
               onTap: () async {
                 final frequency = await showDialog(
@@ -108,7 +107,7 @@ class _FrequencyDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-        title: Text('Wybierz częstotliwość'),
+        title: const Text('Wybierz częstotliwość'),
         children: frequencies
             .map((frequency) => SimpleDialogOption(
                 child: Text(frequency.description),

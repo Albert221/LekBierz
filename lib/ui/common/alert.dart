@@ -43,21 +43,22 @@ class Alert extends StatelessWidget {
     return Container(
         margin: this.margin,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(2.0)), color: color),
-        padding: EdgeInsets.all(16.0),
+            borderRadius: const BorderRadius.all(Radius.circular(2.0)),
+            color: color),
+        padding: const EdgeInsets.all(16.0),
         child: Row(
-          children: <Widget>[
+          children: [
             Icon(
               iconData,
               color: Colors.white,
             ),
-            SizedBox(
+            const SizedBox(
               width: 16.0,
             ),
             Text(
               this.content,
-              style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+              style: const TextStyle(
+                  color: Colors.white, fontWeight: FontWeight.w700),
             )
           ],
         ));

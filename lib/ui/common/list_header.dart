@@ -9,11 +9,13 @@ class ListHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 16.0),
+      padding: const EdgeInsets.symmetric(vertical: 16.0),
       alignment: Alignment.centerLeft,
       child: Text(text.toUpperCase(),
           style: const TextStyle(
-              color: MyApp.grayColor, fontSize: 14.0, fontWeight: FontWeight.w700)),
+              color: MyApp.grayColor,
+              fontSize: 14.0,
+              fontWeight: FontWeight.w700)),
     );
   }
 }

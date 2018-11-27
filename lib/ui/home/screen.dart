@@ -33,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
         appBar: CommonAppBar(
           context: context,
-          title: Text('LekBierz'),
+          title: const Text('LekBierz'),
           actions: [
 //            IconButton(
 //                icon: Icon(Icons.archive),
@@ -52,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ListView(
         children: [
           Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: _buildAddMedicineButton(context)),
           StoreConnector<LekBierzState, Iterable<Medicine>>(
             converter: (store) =>
@@ -77,14 +77,14 @@ class _HomeScreenState extends State<HomeScreen> {
 //            child: _buildArchiveButton(context)),
         ],
       ),
-      _doingWork ? CircularProgressIndicator() : SizedBox()
+      _doingWork ? const CircularProgressIndicator() : const SizedBox()
     ]);
   }
 
   Widget _buildAddMedicineButton(BuildContext context) {
     final line = Expanded(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Container(
           height: 2.0,
           color: MyApp.lightGrayColor,
@@ -104,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     () => this._addMedicineButtonPressed(store),
                 builder: (context, addMedicine) {
                   return FlatButton(
-                    child: Text('DODAJ LEK'),
+                    child: const Text('DODAJ LEK'),
                     color: Theme.of(context).primaryColor,
                     textColor: Colors.white,
                     onPressed: addMedicine,
@@ -119,16 +119,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildArchiveButton(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.symmetric(vertical: 16.0),
+        padding: const EdgeInsets.symmetric(vertical: 16.0),
         child: Align(
           alignment: Alignment.centerRight,
           child: FlatButton(
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('ARCHIWUM'),
-                SizedBox(width: 4.0),
-                Icon(Icons.arrow_forward)
+                const Text('ARCHIWUM'),
+                const SizedBox(width: 4.0),
+                const Icon(Icons.arrow_forward)
               ],
             ),
             onPressed: () => this._archiveButtonPressed(),
@@ -145,8 +145,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final result = await _eanScanner.doStuff(store);
 
     if (!result) {
-      Scaffold.of(_screenContext).showSnackBar(SnackBar(
-          content: Text(
+      Scaffold.of(_screenContext).showSnackBar(const SnackBar(
+          content: const Text(
               'Nie udało się znaleźć zeskanowanego leku. Spróbuj jeszcze raz.')));
     }
   }

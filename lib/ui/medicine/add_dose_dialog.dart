@@ -47,19 +47,19 @@ class _AddDoseDialogState extends State<AddDoseDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(widget._initialsPresent() ? 'Edytuj dawkę' : 'Dodaj dawkę'),
-      contentPadding: EdgeInsets.only(top: 8.0),
+      contentPadding: const EdgeInsets.only(top: 8.0),
       content: SingleChildScrollView(
           child: ListBody(children: [
         _buildDatePicker(context),
         _buildTimePicker(context),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
           child: TextField(
             controller: sideEffectsController,
             maxLines: null,
             keyboardType: TextInputType.multiline,
-            decoration:
-                InputDecoration(hintText: 'Skutki uboczne (o ile jakieś)'),
+            decoration: const InputDecoration(
+                hintText: 'Skutki uboczne (o ile jakieś)'),
           ),
         )
       ])),
@@ -82,16 +82,16 @@ class _AddDoseDialogState extends State<AddDoseDialog> {
 
   Widget _buildDatePicker(BuildContext context) {
     return ListTile(
-        leading: Icon(Icons.calendar_today),
-        title: Text('Data'),
+        leading: const Icon(Icons.calendar_today),
+        title: const Text('Data'),
         subtitle: Text(displayDate(date.millisecondsSinceEpoch)),
         onTap: () => this._handleGettingDate(context));
   }
 
   Widget _buildTimePicker(BuildContext context) {
     return ListTile(
-        leading: Icon(Icons.access_time),
-        title: Text('Czas'),
+        leading: const Icon(Icons.access_time),
+        title: const Text('Czas'),
         subtitle: Text(displayTime(DateTime(0)
             .add(Duration(hours: time.hour, minutes: time.minute))
             .millisecondsSinceEpoch)),
