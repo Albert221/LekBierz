@@ -48,9 +48,13 @@ abstract class Medicine implements Built<Medicine, MedicineBuilder> {
   factory Medicine.fromMedicinalProduct(
       product.MedicinalProductResponse response) {
     MedicineForm form;
+    print(response.product.form);
+
     if (response.product.form == "tabletki powlekane") {
       form = MedicineForm.tablet;
-    } else if (response.product.form == "kapsułki elastyczne") {
+    } else if (response.product.form.startsWith("kapsu")) {
+      // FIXME: There is something wrong with the response encoding.
+      // the form here can stand for "kapsuÅki miÄkkie"
       form = MedicineForm.pill;
     } else if (response.product.form == "syrop") {
       form = MedicineForm.syrup;
