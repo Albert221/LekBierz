@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:android_alarm_manager/android_alarm_manager.dart';
 import 'package:lek_bierz/models/serializers.dart';
 import 'package:lek_bierz/api/flutter_storage.dart';
 import 'package:lek_bierz/redux/state.dart';
@@ -14,7 +15,9 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux_logging/redux_logging.dart';
 import 'package:redux_persist_encoder/redux_persist_encoder.dart';
 
-void main() {
+void main() async {
+  await AndroidAlarmManager.initialize();
+
   Intl.defaultLocale = 'pl';
   initializeDateFormatting('pl');
 
@@ -30,7 +33,14 @@ void main() {
       middleware: [persistor.createMiddleware(), LoggingMiddleware.printer()]);
 
   persistor.load(store);
+
   runApp(MyApp(store: store));
+
+  await AndroidAlarmManager.periodic(const Duration(seconds: 10), 1, lol);
+}
+
+void lol() {
+  debugPrint('siema: ${DateTime.now()}');
 }
 
 class MyApp extends StatelessWidget {

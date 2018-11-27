@@ -21,16 +21,18 @@ dependencies:
   redux_logging: ^0.3.0
 #  redux_persist: ^0.7.0 # Use it once encoder will be added
   redux_persist_encoder: ^0.7.0-rc.5
+  redux_persist_flutter: ^0.6.0
+
   built_value: ^6.1.4
   built_collection: ^4.0.0
 
-  scoped_model: ^0.3.0
+  android_alarm_manager: ^0.2.1
+
   http: ^0.11.3
   barcode_scan: ^0.0.8
   intl: ^0.15.7
   uuid: ^1.0.3
   path_provider: ^0.4.1
-  redux_persist_flutter: ^0.6.0
 
 dev_dependencies:
   flutter_test:
