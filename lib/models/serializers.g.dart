@@ -42,6 +42,10 @@ Serializers _$serializers = (new Serializers().toBuilder()
           const FullType(BuiltList, const [const FullType(Medicine)]),
           () => new ListBuilder<Medicine>())
       ..addBuilderFactory(
+          const FullType(BuiltMap,
+              const [const FullType(DoseTime), const FullType(Duration)]),
+          () => new MapBuilder<DoseTime, Duration>())
+      ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(String)]),
           () => new ListBuilder<String>())
       ..addBuilderFactory(

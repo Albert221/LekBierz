@@ -187,6 +187,10 @@ class _$LekBierzStateSerializer implements StructuredSerializer<LekBierzState> {
       serializers.serialize(object.medicines,
           specifiedType:
               const FullType(BuiltList, const [const FullType(Medicine)])),
+      'doseTimes',
+      serializers.serialize(object.doseTimes,
+          specifiedType: const FullType(BuiltMap,
+              const [const FullType(DoseTime), const FullType(Duration)])),
     ];
 
     return result;
@@ -207,6 +211,13 @@ class _$LekBierzStateSerializer implements StructuredSerializer<LekBierzState> {
           result.medicines.replace(serializers.deserialize(value,
               specifiedType: const FullType(
                   BuiltList, const [const FullType(Medicine)])) as BuiltList);
+          break;
+        case 'doseTimes':
+          result.doseTimes.replace(serializers.deserialize(value,
+              specifiedType: const FullType(BuiltMap, const [
+                const FullType(DoseTime),
+                const FullType(Duration)
+              ])) as BuiltMap);
           break;
       }
     }
@@ -562,13 +573,18 @@ class _$DosingSerializer implements StructuredSerializer<Dosing> {
 class _$LekBierzState extends LekBierzState {
   @override
   final BuiltList<Medicine> medicines;
+  @override
+  final BuiltMap<DoseTime, Duration> doseTimes;
 
   factory _$LekBierzState([void updates(LekBierzStateBuilder b)]) =>
       (new LekBierzStateBuilder()..update(updates)).build();
 
-  _$LekBierzState._({this.medicines}) : super._() {
+  _$LekBierzState._({this.medicines, this.doseTimes}) : super._() {
     if (medicines == null) {
       throw new BuiltValueNullFieldError('LekBierzState', 'medicines');
+    }
+    if (doseTimes == null) {
+      throw new BuiltValueNullFieldError('LekBierzState', 'doseTimes');
     }
   }
 
@@ -582,18 +598,21 @@ class _$LekBierzState extends LekBierzState {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is LekBierzState && medicines == other.medicines;
+    return other is LekBierzState &&
+        medicines == other.medicines &&
+        doseTimes == other.doseTimes;
   }
 
   @override
   int get hashCode {
-    return $jf($jc(0, medicines.hashCode));
+    return $jf($jc($jc(0, medicines.hashCode), doseTimes.hashCode));
   }
 
   @override
   String toString() {
     return (newBuiltValueToStringHelper('LekBierzState')
-          ..add('medicines', medicines))
+          ..add('medicines', medicines)
+          ..add('doseTimes', doseTimes))
         .toString();
   }
 }
@@ -608,11 +627,18 @@ class LekBierzStateBuilder
   set medicines(ListBuilder<Medicine> medicines) =>
       _$this._medicines = medicines;
 
+  MapBuilder<DoseTime, Duration> _doseTimes;
+  MapBuilder<DoseTime, Duration> get doseTimes =>
+      _$this._doseTimes ??= new MapBuilder<DoseTime, Duration>();
+  set doseTimes(MapBuilder<DoseTime, Duration> doseTimes) =>
+      _$this._doseTimes = doseTimes;
+
   LekBierzStateBuilder();
 
   LekBierzStateBuilder get _$this {
     if (_$v != null) {
       _medicines = _$v.medicines?.toBuilder();
+      _doseTimes = _$v.doseTimes?.toBuilder();
       _$v = null;
     }
     return this;
@@ -635,12 +661,16 @@ class LekBierzStateBuilder
   _$LekBierzState build() {
     _$LekBierzState _$result;
     try {
-      _$result = _$v ?? new _$LekBierzState._(medicines: medicines.build());
+      _$result = _$v ??
+          new _$LekBierzState._(
+              medicines: medicines.build(), doseTimes: doseTimes.build());
     } catch (_) {
       String _$failedField;
       try {
         _$failedField = 'medicines';
         medicines.build();
+        _$failedField = 'doseTimes';
+        doseTimes.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'LekBierzState', _$failedField, e.toString());

@@ -10,6 +10,7 @@ part 'state.g.dart';
 abstract class LekBierzState
     implements Built<LekBierzState, LekBierzStateBuilder> {
   BuiltList<Medicine> get medicines;
+  BuiltMap<DoseTime, Duration> get doseTimes;
 
   LekBierzState._();
 
